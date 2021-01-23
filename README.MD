@@ -1,4 +1,4 @@
-# c-libs
+# RND Libraries
 
 This directory holds a collection of my self-written C libraries.
 Some of these may be data structure implementations, wrappers,
@@ -8,7 +8,7 @@ collisions.
 
 ## Documentation
 
-All libraries are throughly documented with [Doxygen](https://www.doxygen.nl).
+All header files are thoroughly documented with [Doxygen](https://www.doxygen.nl).
 The documentation is not included in the repository though,
 you can generate it yourself with the following `make` command:
 
@@ -23,7 +23,7 @@ You can go into each directory individually and compile only what you need,
 or you can use the makefile that resides in this directory and it will
 automatically invoke the makefiles in each of the subdirectories.
 
-Therefore, to install all libraries in this directory, run (if necessary, as root):
+Therefore, to install all libraries at once, run from the top directory (if necessary, as root):
 
     make install
 
