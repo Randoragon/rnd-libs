@@ -15,7 +15,7 @@ almost always outperformed by them. Hence, this implementation uses the dynamic 
 The library employs binary search for finding the right spot to insert an element while preserving
 sorted (by priority) order.
 
-![image](https://raw.githubusercontent.com/Randoragon/randoutils/master/c-libs/priorityqueue/benchmark.png)
+![image](https://raw.githubusercontent.com/Randoragon/rnd-libs/master/priorityqueue/benchmark.png)
 
 ## Dependencies
 
