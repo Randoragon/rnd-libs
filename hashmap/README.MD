@@ -11,8 +11,8 @@ lists are used to avoid name collisions (theoretical worst lookup time is O(n)).
 
 ## Dependencies
 
-- [RND\_ErrMsg](https://github.com/randoragon/randoutils/tree/master/c-libs/errmsg)
-- [RND\_LinkedList](https://github.com/randoragon/randoutils/tree/master/c-libs/linkedlist)
+- [RND\_ErrMsg](https://github.com/randoragon/rnd-libs/errmsg)
+- [RND\_LinkedList](https://github.com/randoragon/rnd-libs/linkedlist)
 
 ## Installation
 

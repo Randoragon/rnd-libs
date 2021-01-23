@@ -5,14 +5,14 @@
 This is a small self-written library implementing a stack struct and related functions.
 I wrote it so that I can use it in my other C projects.
 
-You'll notice that the RND library suite also has a [RND\_StackLL](https://github.com/randoragon/randoutils/tree/master/c-libs/stackLL)
+You'll notice that the RND library suite also has a [RND\_StackLL](https://github.com/randoragon/rnd-libs/stackLL)
 library. I wrote the LL version first using linked lists - then I found out that on modern computers
 you usually want to use regular arrays, as due to CPU-caching and memory locality linked lists are
 almost always outperformed by them. Hence, this implementation uses the dynamic array approach.
 
 ## Dependencies
 
-- [RND\_ErrMsg](https://github.com/randoragon/randoutils/tree/master/c-libs/errmsg)
+- [RND\_ErrMsg](https://github.com/randoragon/rnd-libs/errmsg)
 
 ## Installation
 
