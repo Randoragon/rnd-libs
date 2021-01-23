@@ -7,7 +7,7 @@ I wrote it so that I can use it in my other C projects.
 
 ## Dependencies
 
-- [RND\_ErrMsg](https://github.com/randoragon/rnd-libs/errmsg)
+- [RND\_ErrMsg](https://github.com/randoragon/rnd-libs/tree/master/errmsg)
 
 ## Installation
 

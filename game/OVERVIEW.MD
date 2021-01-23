@@ -16,7 +16,7 @@ library yet. Again, I'm writing this file mainly to organize everything in my he
 
 If you don't understand what this means, that's okay, everything from this point
 onward is going to be explained in great depth. Don't forget that you can always
-refer to the [source code](https://github.com/randoragon/rnd-libs/game)
+refer to the [source code](https://github.com/randoragon/rnd-libs/tree/master/game)
 for more details!
 
 ## 1. Objects

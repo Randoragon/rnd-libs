@@ -13,7 +13,7 @@ of those things. Instead, it attempts to be a convenient wrapper for a programme
 they can organize features of other, lower level libraries (like SDL2) into convenient
 structures and workflows.
 
-Please refer to [OVERVIEW.MD](https://github.com/randoragon/rnd-libs/game/OVERVIEW.MD)
+Please refer to [OVERVIEW.MD](https://github.com/randoragon/rnd-libs/tree/master/game/OVERVIEW.MD)
 and the source code for more details.
 
 ## Features
@@ -22,16 +22,16 @@ and the source code for more details.
 - manage instances (access their variables, despawn, etc.)
 - write and run custom event handlers (WIP)
 
-See [OVERVIEW.MD](https://github.com/randoragon/rnd-libs/game/OVERVIEW.MD) for
+See [OVERVIEW.MD](https://github.com/randoragon/rnd-libs/tree/master/game/OVERVIEW.MD) for
 a general outline and documentation.
 
 ## Installation
 
 You will need to install these libraries as runtime dependencies:
 
-- [RND\_LinkedList](https://github.com/randoragon/rnd-libs/linkedlist)
-- [RND\_HashMap](https://github.com/randoragon/rnd-libs/hashmap)
-- [RND\_ErrMsg](https://github.com/randoragon/rnd-libs/errmsg)
+- [RND\_LinkedList](https://github.com/randoragon/rnd-libs/tree/master/linkedlist)
+- [RND\_HashMap](https://github.com/randoragon/rnd-libs/tree/master/hashmap)
+- [RND\_ErrMsg](https://github.com/randoragon/rnd-libs/tree/master/errmsg)
 
 Run the following code, if necessary as root:
 
