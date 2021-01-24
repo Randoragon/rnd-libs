@@ -19,6 +19,8 @@ file in your internet browser of choice.
 
 ## Building
 
+Arch Linux users can install the `librnd-git` AUR package.
+
 You can go into each directory individually and compile only what you need,
 or you can use the makefile that resides in this directory and it will
 automatically invoke the makefiles in each of the subdirectories.
