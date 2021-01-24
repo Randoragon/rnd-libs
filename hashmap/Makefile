@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=c99 -Wpedantic -Werror
+CFLAGS=-std=c99 -pedantic -Werror
 OBJS=RND_HashMap.o
 OUT=librnd_hashmap.so
 
@@ -19,8 +19,10 @@ debug: clean all
 
 install: CFLAGS += -O3
 install: clean all
-	cp -- RND_HashMap.h /usr/include/
-	cp -- $(OUT) /usr/lib/
+	cp -f -- RND_HashMap.h /usr/include/RND_HashMap.h
+	chmod 644 -- /usr/include/RND_HashMap.h
+	cp -f -- $(OUT) /usr/lib/$(OUT)
+	chmod 755 -- /usr/lib/$(OUT)
 
 example: example.o
 	$(CC) $(CFLAGS) example.o -lrnd_hashmap -o a.out

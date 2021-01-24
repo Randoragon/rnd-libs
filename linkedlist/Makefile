@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=c99 -Wpedantic -Werror
+CFLAGS=-std=c99 -pedantic -Werror
 OBJS=RND_LinkedList.o
 OUT=librnd_linkedlist.so
 
@@ -19,8 +19,10 @@ debug: clean all
 
 install: CFLAGS += -O3
 install: clean all
-	cp -- RND_LinkedList.h /usr/include/
-	cp -- $(OUT) /usr/lib/
+	cp -f -- RND_LinkedList.h /usr/include/RND_LinkedList.h
+	chmod 644 -- /usr/include/RND_LinkedList.h
+	cp -f -- $(OUT) /usr/lib/$(OUT)
+	chmod 755 -- /usr/lib/$(OUT)
 
 example: example.o
 	$(CC) $(CFLAGS) example.o -lrnd_linkedlist -o a.out
