@@ -2,6 +2,7 @@ CC=gcc
 CFLAGS=-std=c99 -pedantic -Werror
 OBJS=RND_Queue.o
 OUT=librnd_queue.so
+PREFIX=/usr/local
 
 all: main
 
@@ -19,10 +20,11 @@ debug: clean all
 
 install: CFLAGS += -O3
 install: clean all
-	cp -f -- RND_Queue.h /usr/include/RND_Queue.h
-	chmod 644 -- /usr/include/RND_Queue.h
-	cp -f -- $(OUT) /usr/lib/$(OUT)
-	chmod 755 -- /usr/lib/$(OUT)
+	mkdir -p ${DESTDIR}${PREFIX}/include  ${DESTDIR}${PREFIX}/lib
+	cp -f -- RND_Queue.h ${DESTDIR}${PREFIX}/include
+	chmod 644 -- ${DESTDIR}${PREFIX}/include/RND_Queue.h
+	cp -f -- $(OUT) ${DESTDIR}${PREFIX}/lib
+	chmod 755 -- ${DESTDIR}${PREFIX}/lib/$(OUT)
 
 example: example.o
 	$(CC) $(CFLAGS) example.o -lrnd_queue -o a.out

@@ -2,6 +2,7 @@ CC=gcc
 CFLAGS=-std=c99 -pedantic -Werror
 OBJS=RND_PriorityQueueLL.o
 OUT=librnd_priorityqueuell.so
+PREFIX=/usr/local
 
 all: main
 
@@ -18,10 +19,11 @@ debug: CFLAGS += -g -Og
 debug: clean all
 install: CFLAGS += -O3
 install: clean all
-	cp -f -- RND_PriorityQueueLL.h /usr/include/RND_PriorityQueueLL.h
-	chmod 644 -- /usr/include/RND_PriorityQueueLL.h
-	cp -f -- $(OUT) /usr/lib/$(OUT)
-	chmod 755 -- /usr/lib/$(OUT)
+	mkdir -p ${DESTDIR}${PREFIX}/include  ${DESTDIR}${PREFIX}/lib
+	cp -f -- RND_PriorityQueueLL.h ${DESTDIR}${PREFIX}/include
+	chmod 644 -- ${DESTDIR}${PREFIX}/include/RND_PriorityQueueLL.h
+	cp -f -- $(OUT) ${DESTDIR}${PREFIX}/lib
+	chmod 755 -- ${DESTDIR}${PREFIX}/lib/$(OUT)
 
 example: example.o
 	$(CC) $(CFLAGS) example.o -lrnd_priorityqueuell -o a.out
