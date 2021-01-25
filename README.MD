@@ -6,6 +6,17 @@ helper scripts and so on. The list may grow longer in size.
 All libraries are prefixed "RND" for "Randoragon" to avoid name
 collisions.
 
+The libraries are not necessarily "finished". I will never push
+incomplete or buggy features on purpose, but the number of individual
+features of each library may increase (adding new functions, etc.).
+Also feel free to request new features.
+
+## Contact
+
+- Email: [<randoragongamedev@gmail.com>](mailto:randoragongamedev@gmail.com)
+- Discord: Randoragon#1958
+- Discord Server: https://discord.gg/YqJYzMS
+
 ## Documentation
 
 All header files are thoroughly documented with [Doxygen](https://www.doxygen.nl).
