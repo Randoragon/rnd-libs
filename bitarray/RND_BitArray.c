@@ -200,3 +200,84 @@ int RND_bitArrayPrint(const RND_BitArray *bitarray)
 
     return 0;
 }
+
+int RND_bitArrayAnd(RND_BitArray *dest, const RND_BitArray *src)
+{
+    if (!dest) {
+        RND_ERROR("the destination bitarray does not exist");
+        return 1;
+    }
+    if (!src) {
+        return 0;
+    }
+    size_t i = dest->size,
+           j = src->size;
+    bool jstop = false;
+    while (i-- > 0) {
+        uint8_t *field = dest->bits + (i / 8);
+        bool val1 = (*field & (0x80 >> (i % 8))),
+             val2 = false;
+        if (j-- > 0 && !jstop && val1) {
+             val2 = (src->bits[j / 8] & (0x80 >> (j % 8)));
+        } else {
+            jstop = true;
+        }
+        *field = (val1 && val2)? *field : (*field & ~(0x80 >> (i % 8)));
+    }
+    
+    return 0;
+}
+
+int RND_bitArrayOr(RND_BitArray *dest, const RND_BitArray *src)
+{
+    if (!dest) {
+        RND_ERROR("the destination bitarray does not exist");
+        return 1;
+    }
+    if (!src) {
+        return 0;
+    }
+    size_t i = dest->size,
+           j = src->size;
+    while (i-- > 0 && j-- > 0) {
+        uint8_t *field = dest->bits + (i / 8);
+        bool val1 = (*field & (0x80 >> (i % 8))),
+             val2 = (src->bits[j / 8] & (0x80 >> (j % 8)));
+        *field = (val1 || val2)? (*field | (0x80 >> (i % 8))) : *field;
+    }
+    
+    return 0;
+}
+
+int RND_bitArrayXor(RND_BitArray *dest, const RND_BitArray *src)
+{
+    if (!dest) {
+        RND_ERROR("the destination bitarray does not exist");
+        return 1;
+    }
+    if (!src) {
+        return 0;
+    }
+    size_t i = dest->size,
+           j = src->size;
+    while (i-- > 0 && j-- > 0) {
+        uint8_t *field = dest->bits + (i / 8);
+        bool val1 = (*field & (0x80 >> (i % 8))),
+             val2 = (src->bits[j / 8] & (0x80 >> (j % 8)));
+        *field = ((val1 && !val2) || (!val1 && val2))? (*field | (0x80 >> (i % 8))) : (*field & ~(0x80 >> (i % 8)));
+    }
+    
+    return 0;
+}
+
+int RND_bitArrayNegate(RND_BitArray *bitarray)
+{
+    if (!bitarray) {
+        RND_ERROR("the bitarray does not exist");
+        return 1;
+    }
+    for (size_t i = 0; i < bitarray->size / 8; i++) {
+        bitarray->bits[i] = ~bitarray->bits[i];
+    }
+    return 0;
+}

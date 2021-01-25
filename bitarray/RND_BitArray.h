@@ -20,7 +20,7 @@
 typedef struct RND_BitArray RND_BitArray;
 /// @endcond
 
-/// A bitarray (also called bitarray) for compactly storing boolean values.
+/// A bitarray  for compactly storing boolean values.
 struct RND_BitArray
 {
     /** Holds the bitarray values
@@ -34,7 +34,7 @@ struct RND_BitArray
     /** Stores the size of the bitarray (in bits)
      *
      * The actual size of the @ref bits array is equal to
-     * (@ref size / 8), because the array consists of
+     * ((@ref size + 7) / 8), because the array consists of
      * 8-bit elements.
      */
     size_t size;
@@ -128,6 +128,7 @@ int  RND_bitArrayToggle(RND_BitArray *bitarray, size_t index);
  * This function should be called on every bitarray created by @ref
  * RND_bitArrayCreate once you no longer need it.
  *
+ * @param[in] bitarray A pointer to an initialized @ref RND_BitArray struct.
  * @returns
  * - 0 - success
  * - 1 - @p bitarray is a NULL-pointer
@@ -156,5 +157,64 @@ size_t RND_bitArraySize(const RND_BitArray *bitarray);
  * - 1 - @p bitarray is a NULL-pointer
  */
 int  RND_bitArrayPrint(const RND_BitArray *bitarray);
+
+/** Performs the logical AND operation on two bitarrays.
+ *
+ * The result of the operation will overwrite the contents of
+ * @p dest. If the size of @p dest is greater than the size
+ * of @p src, the remaining space is padded with 0s from the left.
+ * If the size of @p dest is smaller than the size of @p src,
+ * the excessive bits are ignored (also from the left).
+ *
+ * @param[inout] dest A pointer to the bitarray for storing the result.
+ * @param[in] src A pointer to any other bitarray (if @c NULL, nothing happens).
+ * @returns
+ * - 0 - success
+ * - 1 - @p dest is a NULL-pointer
+ */
+int  RND_bitArrayAnd(RND_BitArray *dest, const RND_BitArray *src);
+
+/** Performs the logical OR operation on two bitarrays.
+ *
+ * The result of the operation will overwrite the contents of
+ * @p dest. If the size of @p dest is greater than the size
+ * of @p src, the remaining space is padded with 0s from the left.
+ * If the size of @p dest is smaller than the size of @p src,
+ * the excessive bits are ignored (also from the left).
+ *
+ * @param[inout] dest A pointer to the bitarray for storing the result.
+ * @param[in] src A pointer to any other bitarray (if @c NULL, nothing happens).
+ * @returns
+ * - 0 - success
+ * - 1 - @p dest is a NULL-pointer
+ */
+int  RND_bitArrayOr(RND_BitArray *dest, const RND_BitArray *src);
+
+/** Performs the logical XOR operation on two bitarrays.
+ *
+ * The result of the operation will overwrite the contents of
+ * @p dest. If the size of @p dest is greater than the size
+ * of @p src, the remaining space is padded with 0s from the left.
+ * If the size of @p dest is smaller than the size of @p src,
+ * the excessive bits are ignored (also from the left).
+ *
+ * @param[inout] dest A pointer to the bitarray for storing the result.
+ * @param[in] src A pointer to any other bitarray (if @c NULL, nothing happens).
+ * @returns
+ * - 0 - success
+ * - 1 - @p dest is a NULL-pointer
+ */
+int  RND_bitArrayXor(RND_BitArray *dest, const RND_BitArray *src);
+
+/** Applies negation to every bit in a bitarray.
+ *
+ * This is equivalent to running @ref RND_bitArrayToggle for every bit.
+ *
+ * @param[inout] bitarray A pointer to an initialized @ref RND_BitArray struct.
+ * @returns
+ * - 0 - success
+ * - 1 - @p bitarray is a NULL-pointer
+ */
+int  RND_bitArrayNegate(RND_BitArray *bitarray);
 
 #endif
