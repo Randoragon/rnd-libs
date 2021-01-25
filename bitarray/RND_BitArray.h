@@ -59,7 +59,7 @@ RND_BitArray *RND_bitArrayCreate(size_t size);
 
 /** Returns a selected bit's truth value.
  *
- * @param[in] bitarray A pointer to an initialized @ref RND_BitArray struct.
+ * @param[in] bitarray A pointer to the bitarray.
  * @param[in] index The index of the targeted bit (starts at 0).
  * @returns
  * - @c true - bit is set to true
@@ -71,7 +71,7 @@ bool RND_bitArrayGet(const RND_BitArray *bitarray, size_t index);
 
 /** Sets a selected bit to a chosen value.
  *
- * @param[inout] bitarray A pointer to an initialized @ref RND_BitArray struct.
+ * @param[inout] bitarray A pointer to the bitarray.
  * @param[in] index The index of the targeted bit (starts at 0).
  * @param[in] value The value to set the bit to (@c true or @c false).
  * @returns 
@@ -103,7 +103,7 @@ int  RND_bitArraySet(RND_BitArray *bitarray, size_t index, bool value);
  * - if string length exceedes bitarray size, leftmost extra bits are ignored
  * - if string length is shorter than bitarray size, the extra space is padded with 0s from the left
  *
- * @param[inout] bitarray A pointer to an initialized @ref RND_BitArray struct.
+ * @param[inout] bitarray A pointer to the bitarray.
  * @param[in] format A formatted string denoting the new bitarray.
  * @returns
  * - 0 - success
@@ -114,7 +114,7 @@ int  RND_bitArraySetf(RND_BitArray *bitarray, const char *format);
 
 /** Toggles a selected bit to the opposite value.
  *
- * @param[inout] bitarray A pointer to an initialized @ref RND_BitArray struct.
+ * @param[inout] bitarray A pointer to the bitarray.
  * @param[in] index The index of the targeted bit (starts at 0).
  * @returns 
  * - 0 - success
@@ -128,7 +128,7 @@ int  RND_bitArrayToggle(RND_BitArray *bitarray, size_t index);
  * This function should be called on every bitarray created by @ref
  * RND_bitArrayCreate once you no longer need it.
  *
- * @param[in] bitarray A pointer to an initialized @ref RND_BitArray struct.
+ * @param[in] bitarray A pointer to the bitarray.
  * @returns
  * - 0 - success
  * - 1 - @p bitarray is a NULL-pointer
@@ -137,7 +137,7 @@ int  RND_bitArrayDestroy(RND_BitArray *bitarray);
 
 /** Returns the size of a bitarray (in bits).
  *
- * @param[in] bitarray A pointer to an initialized @ref RND_BitArray struct.
+ * @param[in] bitarray A pointer to the bitarray.
  *
  * @returns
  * - value > 0 - the size of the bitarray
@@ -150,7 +150,7 @@ size_t RND_bitArraySize(const RND_BitArray *bitarray);
  * This function is designed to be a convenient way to peek at the
  * contents of a bitarray. Its only applicable use is probably debugging.
  *
- * @param[in] bitarray A pointer to an initialized @ref RND_BitArray struct.
+ * @param[in] bitarray A pointer to the bitarray.
  *
  * @returns
  * - 0 - success
@@ -210,7 +210,7 @@ int  RND_bitArrayXor(RND_BitArray *dest, const RND_BitArray *src);
  *
  * This is equivalent to running @ref RND_bitArrayToggle for every bit.
  *
- * @param[inout] bitarray A pointer to an initialized @ref RND_BitArray struct.
+ * @param[inout] bitarray A pointer to the bitarray.
  * @returns
  * - 0 - success
  * - 1 - @p bitarray is a NULL-pointer
