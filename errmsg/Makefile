@@ -15,4 +15,4 @@ install:
 clean:
 
 example: example.o
-	$(CC) $(CFLAGS) example.c -o a.out
+	$(CC) $(CFLAGS) -L. example.c -o a.out

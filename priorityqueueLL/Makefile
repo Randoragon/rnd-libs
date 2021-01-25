@@ -26,4 +26,4 @@ install: clean all
 	chmod 755 -- ${DESTDIR}${PREFIX}/lib/$(OUT)
 
 example: example.o
-	$(CC) $(CFLAGS) example.o -lrnd_priorityqueuell -o a.out
+	$(CC) $(CFLAGS) example.o -L. -lrnd_priorityqueuell -o a.out

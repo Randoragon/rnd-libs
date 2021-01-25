@@ -25,4 +25,4 @@ install: clean all
 	chmod 755 -- ${DESTDIR}${PREFIX}/lib/$(OUT)
 
 example: example.o
-	$(CC) $(CFLAGS) -g -Og -lrnd_game example.o -o a.out
+	$(CC) $(CFLAGS) -g -Og -L. -lrnd_game example.o -o a.out
