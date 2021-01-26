@@ -1,6 +1,6 @@
 #include <malloc.h>
 #include <stdio.h>
-#include <RND_ErrMsg.h>
+#include "../errmsg/RND_ErrMsg.h"
 #include <string.h>
 #include "RND_BitArray.h"
 

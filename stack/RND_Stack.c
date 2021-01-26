@@ -1,7 +1,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <string.h>
-#include <RND_ErrMsg.h>
+#include "../errmsg/RND_ErrMsg.h"
 #include "RND_Stack.h"
 
 RND_Stack *RND_stackCreate(size_t capacity)

@@ -1,5 +1,5 @@
-#include <RND_LinkedList.h>
-#include <RND_ErrMsg.h>
+#include "../linkedlist/RND_LinkedList.h"
+#include "../errmsg/RND_ErrMsg.h"
 #include <string.h>
 
 #include "RND_Game.h"
