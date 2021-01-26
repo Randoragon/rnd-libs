@@ -1,5 +1,6 @@
 CC=gcc
 CFLAGS=-std=c99 -pedantic -Werror
+LDFLAGS=-L../linkedlist -lrnd_linkedlist
 OBJS=RND_HashMap.o
 OUT=librnd_hashmap.so
 PREFIX=/usr/local
@@ -7,7 +8,7 @@ PREFIX=/usr/local
 all: main
 
 main: $(OBJS)
-	$(CC) $(CFLAGS) -shared -lrnd_linkedlist $(OBJS) -o $(OUT)
+	$(CC) $(CFLAGS) $(LDFLAGS) -shared $(OBJS) -o $(OUT)
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) -fpic $^ -o $@

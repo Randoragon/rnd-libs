@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-std=c99 -pedantic -Werror
-LDFLAGS=-lrnd_linkedlist -lrnd_priorityqueue
+LDFLAGS=-L../linkedlist -L../priorityqueue -lrnd_linkedlist -lrnd_priorityqueue
 OBJS=RND_Game.o
 OUT=librnd_game.so
 PREFIX=/usr/local
