@@ -46,4 +46,4 @@ you can overwrite the PREFIX variable like so:
     make install PREFIX=/usr
 
 The above command will install headers to `/usr/include` and libraries
-to `/usr/lib` (PREFIX is set to "/usr/local" by default).
+to `/usr/lib` (PREFIX is set to `/usr/local` by default).
