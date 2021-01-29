@@ -307,3 +307,21 @@ int RND_bitArrayNegate(RND_BitArray *bitarray)
     }
     return 0;
 }
+
+RND_BitArray *RND_bitArrayCopy(const RND_BitArray *bitarray)
+{
+    if (!bitarray) {
+        RND_ERROR("the bitarray does not exist");
+        return NULL;
+    }
+    RND_BitArray *new;
+    new = RND_bitArrayCreate(bitarray->size);
+    if (new == NULL) {
+        RND_ERROR("RND_bitArrayCreate returned NULL");
+        return NULL;
+    }
+    for (size_t i = 0; i < (bitarray->size + 7) / 8; i++) {
+        new->bits[i] = bitarray->bits[i];
+    }
+    return new;
+}

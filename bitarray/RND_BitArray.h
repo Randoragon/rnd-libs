@@ -223,4 +223,13 @@ int  RND_bitArrayXor(RND_BitArray *dest, const RND_BitArray *src);
  */
 int  RND_bitArrayNegate(RND_BitArray *bitarray);
 
+/** Creates a deep copy of a bitarray.
+ *
+ * @param[in] bitarray A pointer to the bitarray.
+ * @returns
+ * - the new bitarray's address - success
+ * - @c NULL - insufficient memory @b OR @p bitarray is a NULL-pointer
+ */
+RND_BitArray *RND_bitArrayCopy(const RND_BitArray *bitarray);
+
 #endif /* RND_BITARRAY_H */
