@@ -12,7 +12,7 @@ RND_BitArray *RND_bitArrayCreate(size_t size)
         return NULL;
     }
     bitarray->size = size;
-    size = (size / 8) + ((size % 8)? 1 : 0);
+    size = (size + 7) / 8;
     if (!(bitarray->bits = (uint8_t*)calloc(size, sizeof(uint8_t)))) {
         RND_ERROR("calloc");
         free(bitarray);
@@ -186,7 +186,7 @@ int RND_bitArrayPrint(const RND_BitArray *bitarray)
     }
     int linecount = 0;
     int bitcount  = bitarray->size;
-    for (size_t i = 0; i < bitarray->size / 8 + ((bitarray->size % 8)? 1 : 0); i++) {
+    for (size_t i = 0; i < (bitarray->size + 7) / 8; i++) {
         int jmax = (bitcount > 8)? 8 : bitcount;
         for (int j = 0; j < jmax; j++, bitcount--) {
             printf("%d", !!(bitarray->bits[i] & (0x80 >> j)));
@@ -276,7 +276,7 @@ int RND_bitArrayNegate(RND_BitArray *bitarray)
         RND_ERROR("the bitarray does not exist");
         return 1;
     }
-    for (size_t i = 0; i < bitarray->size / 8; i++) {
+    for (size_t i = 0; i < (bitarray->size + 7) / 8; i++) {
         bitarray->bits[i] = ~bitarray->bits[i];
     }
     return 0;
