@@ -24,8 +24,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "../linkedlist/RND_LinkedList.h"
-#include "../priorityqueue/RND_PriorityQueue.h"
+#include <RND_LinkedList.h>
+#include <RND_PriorityQueue.h>
 
 /********************************************************
  *                    CONSTANTS                         *

@@ -1,6 +1,6 @@
 #include <malloc.h>
 #include <stdio.h>
-#include "../errmsg/RND_ErrMsg.h"
+#include <RND_ErrMsg.h>
 #include <string.h>
 #include "RND_BitArray.h"
 
@@ -213,16 +213,28 @@ int RND_bitArrayAnd(RND_BitArray *dest, const RND_BitArray *src)
     size_t i = dest->size,
            j = src->size;
     bool jstop = false;
-    while (i-- > 0) {
-        uint8_t *field = dest->bits + (i / 8);
-        bool val1 = (*field & (0x80 >> (i % 8))),
-             val2 = false;
-        if (j-- > 0 && !jstop && val1) {
-             val2 = (src->bits[j / 8] & (0x80 >> (j % 8)));
-        } else {
-            jstop = true;
+    if (i % 8 == 0 && j % 8 == 0) {
+        i = (i + 7) / 8, j = (j + 7) / 8;
+        while (i-- > 0) {
+            if (!jstop && j-- > 0) {
+                dest->bits[i] &= src->bits[j];
+            } else {
+                jstop = true;
+                dest->bits[i] = 0x00;
+            }
         }
-        *field = (val1 && val2)? *field : (*field & ~(0x80 >> (i % 8)));
+    } else {
+        while (i-- > 0) {
+            uint8_t *field = dest->bits + (i / 8);
+            bool val1 = (*field & (0x80 >> (i % 8)));
+            if (!jstop && j-- > 0 && val1) {
+                bool val2 = (src->bits[j / 8] & (0x80 >> (j % 8)));
+                *field = (val1 && val2)? *field : (*field & ~(0x80 >> (i % 8)));
+            } else {
+                jstop = true;
+                *field &= ~(0x80 >> (i % 8));
+            }
+        }
     }
     
     return 0;
@@ -239,11 +251,18 @@ int RND_bitArrayOr(RND_BitArray *dest, const RND_BitArray *src)
     }
     size_t i = dest->size,
            j = src->size;
-    while (i-- > 0 && j-- > 0) {
-        uint8_t *field = dest->bits + (i / 8);
-        bool val1 = (*field & (0x80 >> (i % 8))),
-             val2 = (src->bits[j / 8] & (0x80 >> (j % 8)));
-        *field = (val1 || val2)? (*field | (0x80 >> (i % 8))) : *field;
+    if (i % 8 == 0 && j % 8 == 0) {
+        i = (i + 7) / 8, j = (j + 7) / 8;
+        while (i-- > 0 && j-- > 0) {
+            dest->bits[i] |= src->bits[j];
+        }
+    } else {
+        while (i-- > 0 && j-- > 0) {
+            uint8_t *field = dest->bits + (i / 8);
+            bool val1 = (*field & (0x80 >> (i % 8))),
+                 val2 = (src->bits[j / 8] & (0x80 >> (j % 8)));
+            *field = (val1 || val2)? (*field | (0x80 >> (i % 8))) : *field;
+        }
     }
     
     return 0;
@@ -260,11 +279,18 @@ int RND_bitArrayXor(RND_BitArray *dest, const RND_BitArray *src)
     }
     size_t i = dest->size,
            j = src->size;
-    while (i-- > 0 && j-- > 0) {
-        uint8_t *field = dest->bits + (i / 8);
-        bool val1 = (*field & (0x80 >> (i % 8))),
-             val2 = (src->bits[j / 8] & (0x80 >> (j % 8)));
-        *field = ((val1 && !val2) || (!val1 && val2))? (*field | (0x80 >> (i % 8))) : (*field & ~(0x80 >> (i % 8)));
+    if (i % 8 == 0 && j % 8 == 0) {
+        i = (i + 7) / 8, j = (j + 7) / 8;
+        while (i-- > 0 && j-- > 0) {
+            dest->bits[i] ^= src->bits[j];
+        }
+    } else {
+        while (i-- > 0 && j-- > 0) {
+            uint8_t *field = dest->bits + (i / 8);
+            bool val1 = (*field & (0x80 >> (i % 8))),
+                 val2 = (src->bits[j / 8] & (0x80 >> (j % 8)));
+            *field = ((val1 && !val2) || (!val1 && val2))? (*field | (0x80 >> (i % 8))) : (*field & ~(0x80 >> (i % 8)));
+        }
     }
     
     return 0;

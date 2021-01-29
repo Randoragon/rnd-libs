@@ -36,6 +36,12 @@ struct RND_BitArray
      * The actual size of the @ref bits array is equal to
      * ((@ref size + 7) / 8), because the array consists of
      * 8-bit elements.
+     *
+     * Bitarrays with a @c (@ref size % 8 == 0) may outperform
+     * bitarrays with @c (@ref size % 8 != 0) on certain bit operations:
+     * - @ref RND_bitArrayAnd
+     * - @ref RND_bitArrayOr
+     * - @ref RND_bitArrayXor
      */
     size_t size;
 };

@@ -1,6 +1,6 @@
 #include <malloc.h>
 #include <string.h>
-#include "../errmsg/RND_ErrMsg.h"
+#include <RND_ErrMsg.h>
 #include "RND_HashMap.h"
 
 RND_HashMap *RND_hashMapCreate(size_t size, size_t (*hash)(const char *key, size_t size))

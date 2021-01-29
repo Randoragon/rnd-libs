@@ -9,7 +9,7 @@
 #define RND_HASHMAP_H
 
 #include <stdlib.h>
-#include "../linkedlist/RND_LinkedList.h"
+#include <RND_LinkedList.h>
 
 /********************************************************
  *                     STRUCTURES                       *

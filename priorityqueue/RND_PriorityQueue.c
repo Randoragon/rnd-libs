@@ -1,7 +1,7 @@
 #include <malloc.h>
 #include <stdio.h>
 #include <memory.h>
-#include "../errmsg/RND_ErrMsg.h"
+#include <RND_ErrMsg.h>
 #include "RND_PriorityQueue.h"
 
 RND_PriorityQueue *RND_priorityQueueCreate(size_t capacity)
