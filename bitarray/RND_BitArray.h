@@ -217,4 +217,4 @@ int  RND_bitArrayXor(RND_BitArray *dest, const RND_BitArray *src);
  */
 int  RND_bitArrayNegate(RND_BitArray *bitarray);
 
-#endif
+#endif /* RND_BITARRAY_H */

@@ -207,4 +207,4 @@ int RND_queueLLPrintMap(const RND_QueueLL *elem, size_t index);
  */
 int RND_queueLLDtorFree(const void *data);
 
-#endif
+#endif /* RND_QUEUE_LL_H */

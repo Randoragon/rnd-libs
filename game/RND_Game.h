@@ -401,4 +401,4 @@ inline void RND_gameHandlerAdd(const RND_GameHandler *handler, RND_GameObjectInd
     handler->handlers[index] = func;
 }
 
-#endif
+#endif /* RND_GAME_H */

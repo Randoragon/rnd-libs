@@ -236,4 +236,4 @@ void RND_hashMapPrint(const RND_HashMap *map);
  */
 int RND_hashMapDtorFree(const void *data);
 
-#endif
+#endif /* RND_HASHMAP_H */

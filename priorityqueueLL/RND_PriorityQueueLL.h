@@ -235,4 +235,4 @@ int RND_priorityQueueLLPrintMap(const RND_PriorityQueueLL *elem, size_t index);
  */
 int RND_priorityQueueLLDtorFree(const void *data);
 
-#endif
+#endif /* RND_PRIORITY_QUEUE_LL_H */

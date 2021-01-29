@@ -206,4 +206,4 @@ int RND_priorityQueuePrint(const RND_PriorityQueue *queue);
  */
 int RND_priorityQueueDtorFree(const void *data);
 
-#endif
+#endif /* RND_PRIORITY_QUEUE_H */

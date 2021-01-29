@@ -207,4 +207,4 @@ int RND_stackLLPrintMap(const RND_StackLL *elem, size_t index);
  */
 int RND_stackLLDtorFree(const void *data);
 
-#endif
+#endif /* RND_STACK_LL_H */

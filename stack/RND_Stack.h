@@ -165,4 +165,4 @@ int RND_stackDtorFree(const void *data);
  */
 int RND_stackPrint(const RND_Stack *stack);
 
-#endif
+#endif /* RND_STACK_H */

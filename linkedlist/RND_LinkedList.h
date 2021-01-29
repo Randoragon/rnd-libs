@@ -225,4 +225,4 @@ int RND_linkedListPrintMap(RND_LinkedList *elem, size_t index);
  */
 int RND_linkedListDtorFree(const void *data);
 
-#endif
+#endif /* RND_LINKEDLIST_H */

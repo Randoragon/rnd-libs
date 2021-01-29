@@ -73,4 +73,4 @@
         putc('\n', stderr); \
     } while (0)
 
-#endif
+#endif /* RND_ERRMSG_H */

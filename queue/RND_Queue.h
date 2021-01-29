@@ -180,4 +180,4 @@ int RND_queuePrint(RND_Queue *queue);
  */
 int RND_queueDtorFree(const void *data);
 
-#endif
+#endif /* RND_QUEUE_H */
