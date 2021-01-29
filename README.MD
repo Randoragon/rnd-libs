@@ -19,6 +19,8 @@ Also feel free to request new features.
 
 ## Documentation
 
+[Read the online documentation here!](https://codedocs.xyz/Randoragon/rnd-libs)
+
 All header files are thoroughly documented with [Doxygen](https://www.doxygen.nl).
 The documentation is not included in the repository though,
 you can generate it yourself with the following `make` command:
