@@ -239,7 +239,7 @@ int RND_linkedListDtorFree(const void *data);
  * a @ref RND_LinkedList pointer and pass its address as @p dest,
  * no allocation or initialization required.
  * @param[in] src A pointer to the list to copy to @p dest.
- * @param[inout] cpy A pointer to a function which intakes
+ * @param[in] cpy A pointer to a function which intakes
  * @ref RND_LinkedList::data and copies it, returning
  * the address of the copy or @c NULL for failure.
  * @returns

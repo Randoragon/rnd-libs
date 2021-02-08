@@ -194,7 +194,7 @@ int RND_queueDtorFree(const void *data);
  * cannot be an initialized queue, or else memory will leak
  * (i.e. use @c malloc, but not @ref RND_queueCreate).
  * @param[in] src A pointer to the hashmap to copy to @p dest.
- * @param[inout] cpy A pointer to a function which intakes
+ * @param[in] cpy A pointer to a function which intakes
  * a @ref RND_Queue::data element and copies it, returning
  * the address of the copy or @c NULL for failure.
  * @returns

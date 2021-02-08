@@ -250,7 +250,7 @@ int RND_hashMapDtorFree(const void *data);
  * cannot be an initialized hashmap, or else memory will leak
  * (i.e. use @c malloc, but not @ref RND_hashMapCreate).
  * @param[in] src A pointer to the hashmap to copy to @p dest.
- * @param[inout] cpy A pointer to a function which intakes
+ * @param[in] cpy A pointer to a function which intakes
  * @ref RND_HashMapPair::value and copies it, returning
  * the address of the copy or @c NULL for failure. Since
  * data in a hashmap is stored in linked lists (@ref
