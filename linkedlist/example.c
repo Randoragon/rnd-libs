@@ -56,6 +56,7 @@ int main(int argc, char **argv)
     RND_linkedListPrint(&test);
     RND_linkedListPrint(&copy);
     RND_linkedListDestroy(&test, RND_linkedListDtorFree);
+    RND_linkedListDestroy(&copy, NULL);
 
     return EXIT_SUCCESS;
 }
