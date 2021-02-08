@@ -165,4 +165,33 @@ int RND_stackDtorFree(const void *data);
  */
 int RND_stackPrint(const RND_Stack *stack);
 
+/** Creates a copy of a stack.
+ *
+ * Whether the copy is shallow or deep is entirely
+ * dependent on the @p cpy function.
+ *
+ * There is no cleanup before returning error code 3, so
+ * in order to safely recover without leaking memory,
+ * it is necessary to call @ref RND_stackDestroy on @p dest
+ * (when copying is interrupted, the untouched @ref
+ * RND_Stack::data elements will hold @c NULL values,
+ * so @ref RND_stackDestroy's @p dtor must be able to
+ * handle those).
+
+ * @param[out] dest An empty container for the copy. This
+ * has to point to an allocated block of memory, but it
+ * cannot be an initialized stack, or else memory will leak
+ * (i.e. use @c malloc, but not @ref RND_stackCreate).
+ * @param[in] src A pointer to the hashmap to copy to @p dest.
+ * @param[in] cpy A pointer to a function which intakes
+ * a @ref RND_Stack::data element and copies it, returning
+ * the address of the copy or @c NULL for failure.
+ * @returns
+ * - 0 - success
+ * - 1 - insufficient memory
+ * - 2 - one of @p src and @p dest is @c NULL
+ * - 3 - @p cpy returned error
+ */
+int RND_stackCopy(RND_Stack *dest, const RND_Stack *src, void* (*cpy)(const void *));
+
 #endif /* RND_STACK_H */

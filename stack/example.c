@@ -38,7 +38,11 @@ int main(int argc, char **argv)
     printf("capacity: %lu\n", test->capacity);
     RND_stackPop(test, RND_stackDtorFree);
     RND_stackPrint(test);
+    RND_Stack *copy = malloc(sizeof(RND_Stack));
+    RND_stackCopy(copy, test, NULL);
+    RND_stackPrint(copy);
     RND_stackDestroy(test, RND_stackDtorFree);
+    RND_stackDestroy(copy, NULL);
 
     return EXIT_SUCCESS;
 }
