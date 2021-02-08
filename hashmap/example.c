@@ -58,6 +58,7 @@ int main(int argc, char **argv)
     RND_hashMapCopy(copy, test, NULL);
     RND_hashMapPrint(copy);
     RND_hashMapDestroy(test, RND_hashMapDtorFree);
+    RND_hashMapDestroy(copy, NULL);
 
     return EXIT_SUCCESS;
 }
