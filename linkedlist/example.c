@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
-#include <RND_LinkedList.h>
+#include "RND_LinkedList.h"
 
 void add(RND_LinkedList **list, int value)
 {
@@ -51,6 +51,10 @@ int main(int argc, char **argv)
         printf("\nerror filtering the list\n\n");
     }
 
+    RND_LinkedList *copy;
+    RND_linkedListCopy(&copy, &test, NULL);
+    RND_linkedListPrint(&test);
+    RND_linkedListPrint(&copy);
     RND_linkedListDestroy(&test, RND_linkedListDtorFree);
 
     return EXIT_SUCCESS;

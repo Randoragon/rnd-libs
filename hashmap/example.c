@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <RND_HashMap.h>
+#include "RND_HashMap.h"
 
 void add(RND_HashMap *map, char *key, int value)
 {
@@ -54,6 +54,9 @@ int main(int argc, char **argv)
 
     printf("\nview of the entire hashmap:\n");
     RND_hashMapPrint(test);
+    RND_HashMap *copy = malloc(sizeof(RND_HashMap));
+    RND_hashMapCopy(copy, test, NULL);
+    RND_hashMapPrint(copy);
     RND_hashMapDestroy(test, RND_hashMapDtorFree);
 
     return EXIT_SUCCESS;

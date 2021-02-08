@@ -60,6 +60,8 @@ int RND_hashMapAdd(RND_HashMap *map, const char *key, const void *value)
     int error;
     if ((error = RND_linkedListAdd(map->data + index, new))) {
         RND_ERROR("RND_linkedListAdd returned %d for hash index %lu, data %p", error, index, new);
+        free((void*)new->key);
+        free(new);
         return 3;
     }
     return 0;
@@ -193,4 +195,33 @@ void RND_hashMapPrint(const RND_HashMap *map)
             printf("-----\n");
         }
     }
+}
+
+int RND_hashMapCopy(RND_HashMap *dest, const RND_HashMap *src, void* (*cpy)(const void*))
+{
+    if (!src) {
+        RND_ERROR("src hashmap does not exist");
+        return 2;
+    }
+    if (!dest) {
+        RND_ERROR("dest is NULL");
+        return 2;
+    }
+    dest->size = src->size;
+    dest->hash = src->hash;
+    if (!(dest->data = (RND_LinkedList**)malloc(sizeof(RND_LinkedList*) * dest->size))) {
+        RND_ERROR("malloc");
+        return 1;
+    }
+    for (size_t i = 0; i < dest->size; i++) {
+        dest->data[i] = RND_linkedListCreate();
+    }
+    for (size_t i = 0; i < dest->size; i++) {
+        int err;
+        if ((err = RND_linkedListCopy(dest->data + i, src->data + i, cpy))) {
+            RND_ERROR("RND_linkedListCopy returned error for src->data[%lu]", i);
+            return 2 + err;
+        }
+    }
+    return 0;
 }

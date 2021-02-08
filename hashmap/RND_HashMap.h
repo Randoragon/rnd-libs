@@ -236,4 +236,33 @@ void RND_hashMapPrint(const RND_HashMap *map);
  */
 int RND_hashMapDtorFree(const void *data);
 
+/** Creates a copy of a hashmap.
+ *
+ * Whether the copy is shallow or deep is entirely
+ * dependent on the @p cpy function.
+ *
+ * There is no cleanup before returning error code 3+, so
+ * in order to safely recover without leaking memory,
+ * it is necessary to call @ref RND_hashMapDestroy on @p dest.
+ *
+ * @param[out] dest An empty container for the copy. This
+ * has to point to an allocated block of memory, but it
+ * cannot be an initialized hashmap, or else memory will leak
+ * (i.e. use @c malloc, but not @ref RND_hashMapCreate).
+ * @param[in] src A pointer to the hashmap to copy to @p dest.
+ * @param[inout] cpy A pointer to a function which intakes
+ * @ref RND_HashMapPair::value and copies it, returning
+ * the address of the copy or @c NULL for failure. Since
+ * data in a hashmap is stored in linked lists (@ref
+ * RND_HashMap::data), this parameter will be transparently
+ * passed to @ref RND_linkedListCopy to duplicate every
+ * linked list.
+ * @returns
+ * - 0 - success
+ * - 1 - insufficient memory
+ * - 2 - one of @p src and @p dest is @c NULL
+ * - 3+ - @ref RND_linkedListCopy returned error code N-2
+ */
+int RND_hashMapCopy(RND_HashMap *dest, const RND_HashMap *src, void* (*cpy)(const void*));
+
 #endif /* RND_HASHMAP_H */

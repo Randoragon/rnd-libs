@@ -210,3 +210,47 @@ int RND_linkedListPrint(RND_LinkedList **list)
     printf("+-----------------------------------------+\n");
     return ret;
 }
+
+int RND_linkedListCopy(RND_LinkedList **dest, RND_LinkedList **src, void* (*cpy)(const void*))
+{
+    *dest = RND_linkedListCreate();
+    if (!*src) {
+        RND_WARN("copying an empty list");
+        return 0;
+    }
+    if (!(*dest = malloc(sizeof(RND_LinkedList)))) {
+        RND_ERROR("malloc");
+        return 1;
+    }
+    RND_LinkedList *next = NULL,
+                   *prev = *dest;
+    if (cpy != NULL) {
+        prev->data = cpy((*src)->data);
+        if (prev->data == NULL) {
+            RND_ERROR("cpy function returned NULL");
+            return 2;
+        }
+    } else {
+        prev->data = (*src)->data;
+        prev->next = NULL;
+    }
+    for (RND_LinkedList *s = (*src)->next; s != NULL; s = s->next) {
+        if (!(next = malloc(sizeof(RND_LinkedList)))) {
+            RND_ERROR("malloc");
+            return 1;
+        }
+        if (cpy != NULL) {
+            next->data = cpy(s->data);
+            if (next->data == NULL) {
+                RND_ERROR("cpy function returned NULL");
+                return 2;
+            }
+        } else {
+            next->data = s->data;
+        }
+        prev->next = next;
+        next->next = NULL;
+        prev = next;
+    }
+    return 0;
+}

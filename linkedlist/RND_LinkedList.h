@@ -225,4 +225,28 @@ int RND_linkedListPrintMap(RND_LinkedList *elem, size_t index);
  */
 int RND_linkedListDtorFree(const void *data);
 
+ /** Creates a copy of a list.
+ *
+ * Whether the copy is shallow or deep is entirely
+ * dependent on the @p cpy function.
+ *
+ * There is no cleanup before returning error code 2, so
+ * in order to safely recover without leaking memory,
+ * it is necessary to call @ref RND_linkedListDestroy on @p dest.
+ *
+ * @param[out] dest The address of the pointer to be overwritten
+ * with the address of the copy. In practice you can just create
+ * a @ref RND_LinkedList pointer and pass its address as @p dest,
+ * no allocation or initialization required.
+ * @param[in] src A pointer to the list to copy to @p dest.
+ * @param[inout] cpy A pointer to a function which intakes
+ * @ref RND_LinkedList::data and copies it, returning
+ * the address of the copy or @c NULL for failure.
+ * @returns
+ * - 0 - success
+ * - 1 - insufficient memory
+ * - 2 - @p cpy returned @c NULL
+ */
+int RND_linkedListCopy(RND_LinkedList **dest, RND_LinkedList **src, void* (*cpy)(const void*));
+ 
 #endif /* RND_LINKEDLIST_H */
