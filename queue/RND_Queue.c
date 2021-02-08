@@ -183,3 +183,36 @@ int RND_queuePrint(RND_Queue *queue)
     printf("+-----------------------------------------+\n");
     return 0;
 }
+
+int RND_queueCopy(RND_Queue *dest, const RND_Queue *src, void* (*cpy)(const void *))
+{
+    if (!dest) {
+        RND_ERROR("the dest queue does not exist");
+        return 2;
+    }
+    if (!src) {
+        RND_ERROR("the src queue does not exist");
+        return 2;
+    }
+    dest->size = src->size;
+    dest->capacity = src->capacity;
+    if (!(dest->data = malloc(sizeof(void*) * src->capacity))) {
+        RND_ERROR("malloc");
+        return 1;
+    }
+    for (void **s = src->data, **d = dest->data; s < src->data + src->capacity; s++, d++) {
+        if (cpy != NULL) {
+            void *new;
+            if (!(new = cpy(*s))) {
+                RND_ERROR("cpy function returned error for %p", *s);
+                return 3;
+            }
+            *d = new;
+        } else {
+            *d = *s;
+        }
+    }
+    dest->head = dest->data + (src->head - src->data);
+    dest->tail = dest->data + (src->tail - src->data);
+    return 0;
+}

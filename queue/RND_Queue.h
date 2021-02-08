@@ -180,4 +180,29 @@ int RND_queuePrint(RND_Queue *queue);
  */
 int RND_queueDtorFree(const void *data);
 
+/** Creates a copy of a queue.
+ *
+ * Whether the copy is shallow or deep is entirely
+ * dependent on the @p cpy function.
+ *
+ * There is no cleanup before returning error code 3+, so
+ * in order to safely recover without leaking memory,
+ * it is necessary to call @ref RND_queueDestroy on @p dest.
+ *
+ * @param[out] dest An empty container for the copy. This
+ * has to point to an allocated block of memory, but it
+ * cannot be an initialized queue, or else memory will leak
+ * (i.e. use @c malloc, but not @ref RND_queueCreate).
+ * @param[in] src A pointer to the hashmap to copy to @p dest.
+ * @param[inout] cpy A pointer to a function which intakes
+ * a @ref RND_Queue::data element and copies it, returning
+ * the address of the copy or @c NULL for failure.
+ * @returns
+ * - 0 - success
+ * - 1 - insufficient memory
+ * - 2 - one of @p src and @p dest is @c NULL
+ * - 3+ - @p cpy returned error
+ */
+int RND_queueCopy(RND_Queue *dest, const RND_Queue *src, void* (*cpy)(const void *));
+
 #endif /* RND_QUEUE_H */
