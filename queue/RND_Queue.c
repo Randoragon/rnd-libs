@@ -196,7 +196,7 @@ int RND_queueCopy(RND_Queue *dest, const RND_Queue *src, void* (*cpy)(const void
     }
     dest->size = src->size;
     dest->capacity = src->capacity;
-    if (!(dest->data = malloc(sizeof(void*) * src->capacity))) {
+    if (!(dest->data = calloc(src->capacity, sizeof(void*)))) {
         RND_ERROR("malloc");
         return 1;
     }

@@ -185,9 +185,13 @@ int RND_queueDtorFree(const void *data);
  * Whether the copy is shallow or deep is entirely
  * dependent on the @p cpy function.
  *
- * There is no cleanup before returning error code 3+, so
+ * There is no cleanup before returning error code 3, so
  * in order to safely recover without leaking memory,
- * it is necessary to call @ref RND_queueDestroy on @p dest.
+ * it is necessary to call @ref RND_queueDestroy on @p dest
+ * (when copying is interrupted, the untouched @ref
+ * RND_Queue::data elements will hold @c NULL values,
+ * so @ref RND_queueDestroy's @p dtor must be able to
+ * handle those).
  *
  * @param[out] dest An empty container for the copy. This
  * has to point to an allocated block of memory, but it
@@ -201,7 +205,7 @@ int RND_queueDtorFree(const void *data);
  * - 0 - success
  * - 1 - insufficient memory
  * - 2 - one of @p src and @p dest is @c NULL
- * - 3+ - @p cpy returned error
+ * - 3 - @p cpy returned error
  */
 int RND_queueCopy(RND_Queue *dest, const RND_Queue *src, void* (*cpy)(const void *));
 
