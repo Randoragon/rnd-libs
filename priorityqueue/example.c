@@ -38,7 +38,11 @@ int main(int argc, char **argv)
     printf("Peeked element with lowest priority: %p -> %d\n", val, *val);
     RND_priorityQueuePop(test, RND_priorityQueueDtorFree);
     RND_priorityQueuePrint(test);
+    RND_PriorityQueue *copy = malloc(sizeof(RND_PriorityQueue));
+    RND_priorityQueueCopy(copy, test, NULL);
+    RND_priorityQueuePrint(copy);
     RND_priorityQueueDestroy(test, RND_priorityQueueDtorFree);
+    RND_priorityQueueDestroy(copy, NULL);
 
     return EXIT_SUCCESS;
 }

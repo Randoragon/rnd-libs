@@ -232,3 +232,37 @@ int RND_priorityQueuePrint(const RND_PriorityQueue *queue)
     printf("+----------------------------------------------------+\n");
     return 0;
 }
+
+int RND_priorityQueueCopy(RND_PriorityQueue *dest, const RND_PriorityQueue *src, void* (*cpy)(const void *))
+{
+    if (!dest) {
+        RND_ERROR("the dest queue does not exist");
+        return 2;
+    }
+    if (!src) {
+        RND_ERROR("the src queue does not exist");
+        return 2;
+    }
+    dest->size = src->size;
+    dest->capacity = src->capacity;
+    if (!(dest->data = calloc(src->capacity, sizeof(RND_PriorityQueuePair)))) {
+        RND_ERROR("calloc");
+        return 1;
+    }
+    for (RND_PriorityQueuePair *s = src->data, *d = dest->data; s < src->data + src->capacity; s++, d++) {
+        if (cpy != NULL) {
+            void *new;
+            if (!(new = cpy(s->value))) {
+                RND_ERROR("cpy function returned error for %p", s->value);
+                return 3;
+            }
+            d->value = new;
+        } else {
+            d->value = s->value;
+        }
+        memcpy((int*)&d->priority, &s->priority, sizeof s->priority);
+    }
+    dest->head = dest->data + (src->head - src->data);
+    dest->tail = dest->data + (src->tail - src->data);
+    return 0;
+}
