@@ -1,5 +1,7 @@
 /** @file
  * The header file of the RND_Game library.
+ * For a more general outline of the functionality,
+ * please read @ref rnd-game-overview.
  *
  * @example game/example.c
  * Here's an example on some of the RND_Game library features.

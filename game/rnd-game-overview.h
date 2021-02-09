@@ -1,4 +1,4 @@
-/** @page rnd-game-overview Game Library Overview
+/** @page rnd-game-overview The Game Library Overview
  *
  * Here's a brief explainer on some features of the library, the inner-workings
  * of some structs and functions, and most importantly, the general thought
