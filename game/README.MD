@@ -13,17 +13,14 @@ of those things. Instead, it attempts to be a convenient wrapper for a programme
 they can organize features of other, lower level libraries (like SDL2) into convenient
 structures and workflows.
 
-Please refer to [OVERVIEW.MD](https://github.com/randoragon/rnd-libs/tree/master/game/OVERVIEW.MD)
-and the source code for more details.
+The Doxygen documentation has a [dedicated page](https://codedocs.xyz/Randoragon/rnd-libs/rnd-game-overview.html)
+which explains some more important inner-workings of the library and how to use it.
 
 ## Features
 
 - create objects and spawn instances
 - manage instances (access their variables, despawn, etc.)
 - write and run custom event handlers (WIP)
-
-See [OVERVIEW.MD](https://github.com/randoragon/rnd-libs/tree/master/game/OVERVIEW.MD) for
-a general outline and documentation.
 
 ## Installation
 
