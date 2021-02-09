@@ -177,7 +177,7 @@ int RND_stackPrint(const RND_Stack *stack);
  * RND_Stack::data elements will hold @c NULL values,
  * so @ref RND_stackDestroy's @p dtor must be able to
  * handle those).
-
+ *
  * @param[out] dest An empty container for the copy. This
  * has to point to an allocated block of memory, but it
  * cannot be an initialized stack, or else memory will leak
