@@ -170,7 +170,7 @@ int RND_stackCopy(RND_Stack *dest, const RND_Stack *src, void* (*cpy)(const void
     dest->size = src->size;
     dest->capacity = src->capacity;
     if (!(dest->data = calloc(src->capacity, sizeof(void*)))) {
-        RND_ERROR("malloc");
+        RND_ERROR("calloc");
         return 1;
     }
     for (void **s = src->data, **d = dest->data; s < src->data + src->capacity; s++, d++) {
