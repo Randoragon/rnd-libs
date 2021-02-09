@@ -2,8 +2,9 @@
  *
  * Here's a brief explainer on some features of the library, the inner-workings
  * of some structs and functions, and most importantly, the general thought
- * behind each struct, the intended workflow, etc. This is @b not a complete
- * documentation, I just spill some of my thoughts in here to keep me on track
+ * behind each struct, the intended workflow, etc. This page is @b not a complete
+ * documentation (for more you can refer to the @ref RND_Game.h file documentation),
+ * I just spill some of my thoughts in here to keep me on track
  * with what I want to do with the library.
  * 
  * @b NOTE: Some of the concepts explained here may be outdated or not available in the
