@@ -133,7 +133,8 @@ void *RND_hashMapGet(const RND_HashMap *map, const char *key);
  * @returns
  * - 0 - success
  * - 1 - @p map is a @c NULL pointer
- * - 2 - @ref RND_linkedListRemove returned an error. If this
+ * - 2 - @p dtor function returned non-0
+ * - 3 - @ref RND_linkedListRemove returned an error. If this
  *   happens, look for the error code in @c stderr and see
  *   the reason for failure in @ref RND_LinkedList documentation.
  */
@@ -185,7 +186,7 @@ RND_HashMapPair *RND_hashMapIndex(const RND_HashMap *map, size_t index);
  * @returns
  * - 0 - success
  * - 1 - @p map is a @c NULL pointer
- * - 2 - some @ref RND_linkedListClear call returned an error
+ * - 2 - some @ref RND_linkedListDestroy call returned an error
  *   (this means that clearing the hashmap was interrupted,
  *   so a potentially serious error)
  */
@@ -241,10 +242,6 @@ int RND_hashMapDtorFree(const void *data);
  * Whether the copy is shallow or deep is entirely
  * dependent on the @p cpy function.
  *
- * There is no cleanup before returning error code 3+, so
- * in order to safely recover without leaking memory,
- * it is necessary to call @ref RND_hashMapDestroy on @p dest.
- *
  * @param[out] dest An empty container for the copy. This
  * has to point to an allocated block of memory, but it
  * cannot be an initialized hashmap, or else memory will leak
@@ -252,16 +249,14 @@ int RND_hashMapDtorFree(const void *data);
  * @param[in] src A pointer to the hashmap to copy to @p dest.
  * @param[in] cpy A pointer to a function which intakes
  * @ref RND_HashMapPair::value and copies it, returning
- * the address of the copy or @c NULL for failure. Since
- * data in a hashmap is stored in linked lists (@ref
- * RND_HashMap::data), this parameter will be transparently
- * passed to @ref RND_linkedListCopy to duplicate every
- * linked list.
+ * the address of the copy or @c NULL for failure.
  * @returns
  * - 0 - success
  * - 1 - insufficient memory
  * - 2 - one of @p src and @p dest is @c NULL
- * - 3+ - @ref RND_linkedListCopy returned error code N-2
+ * - 3 - @p cpy function returned non-0
+ * - 4 - @ref RND_linkedListAdd returned error (read @c
+ *   stderr for details)
  */
 int RND_hashMapCopy(RND_HashMap *dest, const RND_HashMap *src, void* (*cpy)(const void*));
 

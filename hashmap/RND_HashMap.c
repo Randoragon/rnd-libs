@@ -98,12 +98,17 @@ int RND_hashMapRemove(RND_HashMap *map, const char *key, int (*dtor)(const void*
         RND_HashMapPair *pair = elem->data;
         if (elem && strcmp(pair->key, key) == 0) {
             int error;
-            if ((error = RND_linkedListRemove(map->data + p, q, dtor))) {
-                RND_ERROR("RND_linkedListRemove returned %d for hash index %lu, list index %lu, dtor %p", error, p, q, dtor);
+            if (dtor && (error = dtor(pair->value))) {
+                RND_ERROR("dtor function returned %d for key \"%s\", value %p", error, pair->key, pair->value);
                 return 2;
-            } else {
-                return 0;
             }
+            if ((error = RND_linkedListRemove(map->data + p, q, NULL))) {
+                RND_ERROR("RND_linkedListRemove returned %d for key \"%s\", value %p", error, pair->key, pair->value);
+                return 3;
+            }
+            free((void*)pair->key);
+            free(pair);
+            return 0;
         }
     }
     RND_WARN("key \"%s\" not found", key);
@@ -145,10 +150,22 @@ int RND_hashMapClear(RND_HashMap *map, int (*dtor)(const void*))
         return 1;
     }
     for (size_t i = 0; i < map->size; i++) {
+        for (RND_LinkedList *elem = map->data[i]; elem; elem = elem->next) {
+            RND_HashMapPair *pair = elem->data;
+            if (pair != NULL) {
+                int error;
+                if (dtor && (error = dtor(pair->value))) {
+                    RND_ERROR("dtor function returned %d for key \"%s\", value %p", error, pair->key, pair->value);
+                    return 2;
+                }
+                free((void*)pair->key);
+                free(pair);
+            }
+        }
         int error;
-        if ((error = RND_linkedListClear(map->data + i, dtor))) {
-            RND_ERROR("RND_linkedListClear returned %d for hash index %lu, dtor %p", error, i, dtor);
-            return 2;
+        if ((error = RND_linkedListDestroy(map->data + i, NULL))) {
+            RND_ERROR("RND_linkedListDestroy returned %d for list index %lu", error, i);
+            return 3;
         }
     }
     return 0;
@@ -168,12 +185,6 @@ int RND_hashMapDestroy(RND_HashMap *map, int (*dtor)(const void*))
 
 int RND_hashMapDtorFree(const void *data)
 {
-    if (!data) {
-        RND_ERROR("hashmap does not exist");
-        return 1;
-    }
-    free((void*)((RND_HashMapPair*)data)->key);
-    free(((RND_HashMapPair*)data)->value);
     free((void*)data);
     return 0;
 }
@@ -215,13 +226,45 @@ int RND_hashMapCopy(RND_HashMap *dest, const RND_HashMap *src, void* (*cpy)(cons
         return 1;
     }
     for (size_t i = 0; i < dest->size; i++) {
-        dest->data[i] = RND_linkedListCreate();
-    }
-    for (size_t i = 0; i < dest->size; i++) {
-        int err;
-        if ((err = RND_linkedListCopy(dest->data + i, src->data + i, cpy))) {
-            RND_ERROR("RND_linkedListCopy returned error for src->data[%lu]", i);
-            return 2 + err;
+        dest->data[i] = NULL;
+        RND_LinkedList *tmp = RND_linkedListCreate();
+        for (RND_LinkedList *elem = src->data[i]; elem; elem = elem->next) {
+            RND_HashMapPair *old = elem->data,
+                            *new;
+            if (!(new = malloc(sizeof(RND_HashMapPair)))) {
+                RND_ERROR("malloc");
+                free(dest->data);
+                return 1;
+            }
+            size_t keysize = strlen(old->key) + 1;
+            if (!(new->key = malloc(sizeof(char) * keysize))) {
+                RND_ERROR("malloc");
+                free(new);
+                free(dest->data);
+                return 1;
+            }
+            memcpy((void*)new->key, (void*)old->key, keysize);
+            if (cpy) {
+                if ((new->value = cpy(old->value)) == NULL) {
+                    RND_ERROR("cpy function returned NULL");
+                    free((void*)new->key);
+                    free(new);
+                    free(dest->data);
+                    return 3;
+                }
+            } else {
+                new->value = old->value;
+            }
+            int error;
+            if ((error = RND_linkedListAdd(&tmp, new))) {
+                RND_ERROR("RND_linkedListAdd returned %d", error);
+                free((void*)new->key);
+                free(new);
+                free(dest->data);
+                return 4;
+            }
+            dest->data[i] = (dest->data[i] == NULL)? tmp : dest->data[i];
+            for (; tmp->next; tmp = tmp->next);
         }
     }
     return 0;
