@@ -126,6 +126,7 @@ int RND_linkedListClear(RND_LinkedList **list, int (*dtor)(const void *))
     while (i) {
         RND_LinkedList *j = i->next;
         if (dtor && dtor(i->data)) {
+            RND_ERROR("dtor %p returned non-0 for data %p", dtor, i->data);
             return 1;
         }
         free(i);
