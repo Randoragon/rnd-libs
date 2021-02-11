@@ -83,6 +83,7 @@ void *RND_hashMapGet(const RND_HashMap *map, const char *key)
             return pair->value;
         }
     }
+    RND_WARN("hashmap has no key \"%s\"", key);
     return NULL;
 }
 
