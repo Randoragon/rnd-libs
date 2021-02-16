@@ -72,8 +72,14 @@ int RND_queuePop(RND_Queue *queue, int (*dtor)(const void*))
         RND_ERROR("dtor %p returned %d for data %p", dtor, error, *queue->head);
         return 2;
     }
-    queue->head = (queue->head == queue->data + queue->capacity - 1)? queue->data : queue->head + 1;
-    queue->size--;
+    if (queue->size > 0) {
+        queue->head = (queue->head == queue->data + queue->capacity - 1)? queue->data : queue->head + 1;
+        if (--queue->size == 0) {
+            *queue->head = NULL;
+        }
+    } else {
+        RND_WARN("the queue is already empty");
+    }
     return 0;
 }
 
@@ -128,6 +134,7 @@ int RND_queueClear(RND_Queue *queue, int (*dtor)(const void*))
         queue->size = 0;
         queue->head = queue->tail;
     }
+    *queue->head = NULL;
     return 0;
 }
 
