@@ -258,6 +258,14 @@ int RND_gameHandlerRun(RND_GameHandler *handler)
         elem = (elem == q->data + q->capacity - 1)? q->data : elem + 1;
     }
 
+    {
+        int error;
+        if ((error = RND_gameHandlerUpdateQueue(handler))) {
+            RND_ERROR("RND_gameHandlerUpdateQueue returned error %d", error);
+            return -1;
+        }
+    }
+
     return ret;
 }
 
