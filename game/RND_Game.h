@@ -28,6 +28,7 @@
 #include <stdbool.h>
 #include <RND_LinkedList.h>
 #include <RND_PriorityQueue.h>
+#include <RND_Queue.h>
 
 /********************************************************
  *                    CONSTANTS                         *
@@ -81,6 +82,7 @@ typedef int (*RND_GameHandlerFunc)(void*);
 typedef struct RND_GameObjectMeta RND_GameObjectMeta;
 typedef struct RND_GameInstance RND_GameInstance;
 typedef struct RND_GameHandler RND_GameHandler;
+typedef struct RND_GameHandlerOp RND_GameHandlerOp;
 /// @endcond
 
 /// A container for object metadata.
@@ -133,6 +135,28 @@ struct RND_GameHandler
      */
     RND_PriorityQueue *queue;
 
+    /** A queue of pending operations that will mutate @ref queue.
+     *
+     * Whenever library functions have to alter any handler's
+     * @ref queue structure (like @ref RND_gameInstanceSpawn
+     * or @ref RND_gameInstanceKill), they don't operate directly
+     * on @ref queue. This is because if an instance got created
+     * or killed in the middle of running @ref RND_gameHandlerRun
+     * (as a result of some instance's handler code), the
+     * structure of @ref queue would change in the middle of
+     * iterating through it, which would be undefined behavior.
+     * To counter this, all changes to the queue are stored inside
+     * this regular queue and executed in the same order @em before
+     * and @em after @ref RND_gameHandlerRun function. Please note
+     * that even though the instance IDs get added/removed with
+     * a delay, their @ref RND_ctors and @ref RND_dtors code will
+     * be run immediately.
+     *
+     * Every element in this queue is of @ref RND_GameHandlerOp
+     * type.
+     */
+    RND_Queue *queue_pending_changes;
+
     /** The priority function for inserting elements into
      * @ref RND_GameHandler::queue.
      *
@@ -145,6 +169,24 @@ struct RND_GameHandler
      * equally (no priorities).
      */
     int (*priority_func)(RND_GameObjectIndex);
+};
+
+/** Stores a single operation on @ref RND_GameHandler::queue.
+ *
+ * For more information read description of @ref
+ * RND_GameHandler::queue_pending_changes.
+ */
+struct RND_GameHandlerOp
+{
+    /** The type of operation to be performed.
+     *
+     * Equals @c 0 for deletion and anything else for
+     * insertion.
+     */
+    uint8_t opcode;
+
+    /// A pointer to the instance id to insert/delete.
+    RND_GameInstanceId *id;
 };
 
 /********************************************************
@@ -282,6 +324,8 @@ RND_GameInstanceId RND_gameInstanceSpawn(RND_GameObjectIndex index);
  * - 0 - success (also returned if instance is already dead)
  * - 1 - @ref RND_dtors[@ref RND_GameInstance::index]
  *   destructor returned an error.
+ * - 2 - insufficient memory
+ * - 3 - @ref RND_queuePush returned error
  */
 int RND_gameInstanceKill(RND_GameInstanceId id);
 
@@ -308,13 +352,20 @@ RND_GameHandler *RND_gameHandlerCreate(int (*priority_func)(RND_GameObjectIndex)
  * and for each one it will call its respective function
  * from @ref RND_GameHandler::handlers.
  *
- * @param[in] handler A pointer to the event handler.
+ * @note This function doesn't modify the contents of the handler
+ * struct directly, but it does call @ref RND_gameHandlerUpdateQueue
+ * @em twice (at the very start and very end), so if there
+ * are changes pending in @ref RND_GameHandler::queue_pending_changes,
+ * the contents will get altered.
+ *
+ * @param[inout] handler A pointer to the event handler.
  * @returns
  * - 0 - success
  * - a number >0 - the number of handlers that returned
  *   an error
+ * - -1 - @ref RND_gameHandlerUpdateQueue returned error
  */
-int RND_gameHandlerRun(const RND_GameHandler *handler);
+int RND_gameHandlerRun(RND_GameHandler *handler);
 
 /** Frees all memory associated with an instance event handler.
  *
@@ -327,7 +378,8 @@ int RND_gameHandlerRun(const RND_GameHandler *handler);
  * @param[in] handler A pointer to the event handler.
  * @returns
  * - 0 - success
- * - 1 - failed to destroy priority queue
+ * - 1 - failed to destroy RND_GameHandler::queue
+ * - 2 - failed to destroy RND_GameHandler::queue_pending_changes
  */
 int RND_gameHandlerDestroy(RND_GameHandler *handler);
 
@@ -354,9 +406,25 @@ int RND_gameHandlerDestroy(RND_GameHandler *handler);
  * @returns
  * - 0 - success
  * - 1 - @e handler is a NULL pointer
- * - 2 - failed to destroy priority queue
+ * - 2 - failed to destroy RND_GameHandler::queue
+ * - 3 - failed to destroy RND_GameHandler::queue_pending_changes
  */
 int RND_gameHandlerListDtor(const void *handler);
+
+/** A dtor function passed to @ref RND_queueDestroy when
+ * freeing the @ref RND_handlers list in @ref RND_gameCleanup.
+ *
+ * This function is only meant to be used internally by the
+ * library, but it can be used for any queue of initialized
+ * @ref RND_GameHandlerOp pointers.
+ *
+ * @param[in] hop A void pointer to the handler op structure.
+ * @returns
+ * - 0 - success
+ * - 1 - @p hop is a NULL pointer
+ * - 2 - failed to destroy queue
+ */
+int RND_gameHandlerOpQueueDtor(const void *hop);
 
 /** Returns whether or not a specific instance is alive, by instance ID.
  *
@@ -402,5 +470,20 @@ inline void RND_gameHandlerAdd(const RND_GameHandler *handler, RND_GameObjectInd
 {
     handler->handlers[index] = func;
 }
+
+/** Commits the pending changes from @ref RND_GameHandler::queue_pending_changes.
+ *
+ * This is a strictly internal library function, do not mess
+ * with it or you may cause undefined behavior to happen.
+ *
+ * @param[inout] handler The event handler to operate on.
+ * @return
+ * - 0 - success
+ * - 1 - @p handler is a NULL pointer
+ * - 2 - @c RND_queuePeek returned @c NULL (failed to retrieve next operation)
+ * - 3 - @c RND_priorityQueueRemove returned error
+ * - 4 - @c RND_priorityQueuePush returned error
+ */
+int RND_gameHandlerUpdateQueue(RND_GameHandler *handler);
 
 #endif /* RND_GAME_H */

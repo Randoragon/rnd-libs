@@ -6,7 +6,7 @@
 
 // Variable Definitions
 RND_GameObjectMeta *RND_objects_meta;
-RND_GameInstance  *RND_instances;
+RND_GameInstance *RND_instances;
 RND_GameInstanceId RND_instances_size;
 RND_GameInstanceId RND_next_instance_id;
 RND_GameHandlerFunc *RND_ctors, *RND_dtors;
@@ -20,7 +20,7 @@ int RND_gameInit()
         return 1;
     }
     RND_next_instance_id = 1;
-    RND_instances_size   = RND_GAME_INSTANCES_INIT_SIZE;
+    RND_instances_size = RND_GAME_INSTANCES_INIT_SIZE;
     if (!(RND_instances = (RND_GameInstance*)calloc(RND_instances_size, sizeof(RND_GameInstance)))) {
         RND_ERROR("calloc");
         return 1;
@@ -125,17 +125,24 @@ RND_GameInstanceId RND_gameInstanceSpawn(RND_GameObjectIndex index)
 
     for (RND_LinkedList *elem = RND_handlers; elem; elem = elem->next) {
         RND_GameHandler *h = elem->data;
-        RND_GameInstanceId *newid;
-        if (!(newid = (RND_GameInstanceId*)malloc(sizeof(RND_GameInstanceId)))) {
+        RND_GameHandlerOp *hop;
+        if (!(hop = malloc(sizeof(RND_GameHandlerOp)))) {
             RND_ERROR("malloc");
             return 0;
         }
-        *newid = id;
-        int priority = h->priority_func? h->priority_func(index) : 0;
+        if (!(hop->id = (RND_GameInstanceId*)malloc(sizeof(RND_GameInstanceId)))) {
+            RND_ERROR("malloc");
+            free(hop);
+            return 0;
+        }
+        hop->opcode = 1;
+        *hop->id = id;
         int error;
-        if ((error = RND_priorityQueuePush(h->queue, newid, priority))) {
-            RND_ERROR("RND_priorityQueuePush returned %d for instance id %lu, object %u (%s), priority %d",
-                    error, *newid, index, RND_gameObjectGetName(index), priority);
+        if ((error = RND_queuePush(h->queue_pending_changes, hop))) {
+            RND_ERROR("RND_queuePush returned %d for instance id %lu, object %u (%s)",
+                    error, *hop->id, index, RND_gameObjectGetName(index));
+            free(hop->id);
+            free(hop);
             return 0;
         }
     }
@@ -162,18 +169,25 @@ int RND_gameInstanceKill(RND_GameInstanceId id)
     inst->data = NULL;
 
     for (RND_LinkedList *elem = RND_handlers; elem; elem = elem->next) {
-        RND_GameHandler *h   = elem->data;
-        RND_PriorityQueue *q = h->queue;
-        size_t index = 0;
-        for (RND_PriorityQueuePair *i = q->head; i; i = (i == q->data + q->capacity - 1)? q->data : i + 1, index++) {
-            if (id == *(RND_GameInstanceId*)(i->value)) {
-                int error;
-                if ((error = RND_priorityQueueRemove(h->queue, index, RND_priorityQueueDtorFree))) {
-                    RND_ERROR("RND_priorityQueueRemove returned %d for instance id %lu, index %lu",
-                            error, id, index);
-                }
-                break;
-            }
+        RND_GameHandler *h = elem->data;
+        RND_GameHandlerOp *hop;
+        if (!(hop = malloc(sizeof(RND_GameHandlerOp)))) {
+            RND_ERROR("malloc");
+            return 2;
+        }
+        if (!(hop->id = malloc(sizeof(RND_GameInstanceId)))) {
+            RND_ERROR("malloc");
+            free(hop);
+            return 2;
+        }
+        hop->opcode = 0;
+        int error;
+        if ((error = RND_queuePush(h->queue_pending_changes, hop))) {
+            RND_ERROR("RND_queuePush returned %d for instance id %lu (%s)",
+                    error, *hop->id, RND_gameObjectGetName(RND_instances[*hop->id].index));
+            free(hop->id);
+            free(hop);
+            return 3;
         }
     }
     return 0;
@@ -191,19 +205,46 @@ RND_GameHandler *RND_gameHandlerCreate(int (*priority_func)(RND_GameObjectIndex)
         free(new);
         return NULL;
     }
-    new->queue = RND_priorityQueueCreate(128);
+    if (!(new->queue = RND_priorityQueueCreate(128))) {
+        RND_ERROR("RND_priorityQueueCreate failed");
+        free(new);
+        return NULL;
+    }
+    if (!(new->queue_pending_changes = RND_queueCreate(128))) {
+        RND_ERROR("RND_queueCreate failed");
+        RND_priorityQueueDestroy(new->queue, NULL);
+        free(new);
+        return NULL;
+    }
+    int err;
     new->priority_func = priority_func;
-    RND_linkedListAdd(&RND_handlers, new);
+    if ((err = RND_linkedListAdd(&RND_handlers, new))) {
+        RND_ERROR("RND_linkedListAdd failed (error code %d)\n", err);
+        RND_priorityQueueDestroy(new->queue, NULL);
+        RND_queueDestroy(new->queue_pending_changes, NULL);
+        free(new);
+        return NULL;
+    }
     return new;
 }
 
-int RND_gameHandlerRun(const RND_GameHandler *handler)
+int RND_gameHandlerRun(RND_GameHandler *handler)
 {
+    {
+        int error;
+        if ((error = RND_gameHandlerUpdateQueue(handler))) {
+            RND_ERROR("RND_gameHandlerUpdateQueue returned error %d", error);
+            return -1;
+        }
+    }
+
     int ret = 0;
     RND_PriorityQueue *q = handler->queue;
     RND_PriorityQueuePair *elem = q->head,
                           *end  = (q->tail == q->data + q->capacity - 1)? q->data : q->tail + 1;
-    while (elem != end) {
+    bool is_first = (RND_priorityQueueSize(q) > 0);
+    while (elem != end || is_first) {
+        is_first = false;
         RND_GameInstanceId id  = *(RND_GameInstanceId*)elem->value;
         RND_GameInstance *inst = RND_instances + id;
         if (inst->data && handler->handlers[inst->index]) {
@@ -216,6 +257,7 @@ int RND_gameHandlerRun(const RND_GameHandler *handler)
         }
         elem = (elem == q->data + q->capacity - 1)? q->data : elem + 1;
     }
+
     return ret;
 }
 
@@ -223,13 +265,17 @@ int RND_gameHandlerDestroy(RND_GameHandler *handler)
 {
     if (!handler) {
         RND_WARN("handler does not exist!");
-        return 1;
+        return 0;
     }
     free(handler->handlers);
     int error;
     if ((error = RND_priorityQueueDestroy(handler->queue, RND_priorityQueueDtorFree))) {
         RND_ERROR("RND_priorityQueueDestroy returned %d for handler %p\n", error, handler);
         return 1;
+    }
+    if ((error = RND_queueDestroy(handler->queue_pending_changes, RND_gameHandlerOpQueueDtor))) {
+        RND_ERROR("RND_queueDestroy returned %d for handler %p\n", error, handler);
+        return 2;
     }
     free(handler);
     return 0;
@@ -247,6 +293,65 @@ int RND_gameHandlerListDtor(const void *handler)
     if ((error = RND_priorityQueueDestroy(h->queue, RND_priorityQueueDtorFree))) {
         RND_ERROR("RND_priorityQueueDestroy returned %d for handler %p\n", error, h);
         return 2;
+    }
+    if ((error = RND_queueDestroy(h->queue_pending_changes, RND_gameHandlerOpQueueDtor))) {
+        RND_ERROR("RND_queueDestroy returned %d for handler %p\n", error, h);
+        return 3;
+    }
+    return 0;
+}
+
+int RND_gameHandlerOpQueueDtor(const void *hop)
+{
+    const RND_GameHandlerOp *p = hop;
+    free(p->id);
+    free((void*)hop);
+    return 0;
+}
+
+int RND_gameHandlerUpdateQueue(RND_GameHandler *handler)
+{
+    if (!handler) {
+        RND_ERROR("handler does not exist!");
+        return 1;
+    }
+    RND_Queue *q = handler->queue_pending_changes;
+    RND_PriorityQueue *pq = handler->queue;
+    while (q->size > 0) {
+        RND_GameHandlerOp *hop = *q->head;
+        if (hop == NULL) {
+            RND_ERROR("failed to retrieve next operation");
+            return 2;
+        }
+        RND_GameInstanceId *id = hop->id;
+        if (hop->opcode == 0) {
+            size_t index = 0;
+            for (RND_PriorityQueuePair *i = pq->head; i; i = (i == pq->data + pq->capacity - 1)? pq->data : i + 1, index++) {
+                if (*id == *(RND_GameInstanceId*)(i->value)) {
+                    int error;
+                    if ((error = RND_priorityQueueRemove(pq, index, RND_priorityQueueDtorFree))) {
+                        RND_ERROR("RND_priorityQueueRemove returned %d for instance id %lu (%s), index %lu",
+                                error, *id, RND_gameObjectGetName(RND_instances[*id].index), index);
+                        return 3;
+                    }
+                    break;
+                }
+            }
+            free(id);
+        } else {
+            RND_GameObjectIndex index;
+            int priority;
+            index = RND_instances[*id].index;
+            priority = (handler->priority_func)? handler->priority_func(index) : 0;
+            int err;
+            if ((err = RND_priorityQueuePush(pq, id, priority))) {
+                RND_ERROR("RND_priorityQueuePush returned %d for instance %lu (%s)",
+                        err, *id, RND_gameObjectGetName(index));
+                return 4;
+            }
+        }
+        RND_queuePop(q, RND_queueDtorFree); /* Don't use RND_gameHandlerOpQueueDtor on purpose here,
+                                             * because we don't want to free the id stored within. */
     }
     return 0;
 }

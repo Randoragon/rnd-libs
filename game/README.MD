@@ -27,6 +27,8 @@ which explains some more important inner-workings of the library and how to use 
 You will need to install these libraries as runtime dependencies:
 
 - [RND\_LinkedList](https://github.com/randoragon/rnd-libs/tree/master/linkedlist)
+- [RND\_PriorityQueue](https://github.com/randoragon/rnd-libs/tree/master/priorityqueue)
+- [RND\_Queue](https://github.com/randoragon/rnd-libs/tree/master/queue)
 - [RND\_HashMap](https://github.com/randoragon/rnd-libs/tree/master/hashmap)
 - [RND\_ErrMsg](https://github.com/randoragon/rnd-libs/tree/master/errmsg)
 
