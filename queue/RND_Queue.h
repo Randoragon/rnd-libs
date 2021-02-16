@@ -75,10 +75,6 @@ int RND_queuePush(RND_Queue *queue, const void *data);
 
 /** Returns a pointer to the front element of a queue.
  *
- * This function exists only for the sake of library
- * completeness, but you may use @ref RND_Queue::head
- * with the exact same effect.
- *
  * @param[inout] queue A pointer to the queue.
  * @returns
  * - @ref RND_Queue::head - success

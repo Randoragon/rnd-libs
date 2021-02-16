@@ -58,7 +58,7 @@ int RND_queuePush(RND_Queue *queue, const void *data)
 
 void *RND_queuePeek(const RND_Queue *queue)
 {
-    return queue? *queue->head : NULL;
+    return (queue && queue->size > 0)? *queue->head : NULL;
 }
 
 int RND_queuePop(RND_Queue *queue, int (*dtor)(const void*))
@@ -74,9 +74,7 @@ int RND_queuePop(RND_Queue *queue, int (*dtor)(const void*))
     }
     if (queue->size > 0) {
         queue->head = (queue->head == queue->data + queue->capacity - 1)? queue->data : queue->head + 1;
-        if (--queue->size == 0) {
-            *queue->head = NULL;
-        }
+        queue->size--;
     } else {
         RND_WARN("the queue is already empty");
     }
@@ -134,7 +132,6 @@ int RND_queueClear(RND_Queue *queue, int (*dtor)(const void*))
         queue->size = 0;
         queue->head = queue->tail;
     }
-    *queue->head = NULL;
     return 0;
 }
 
