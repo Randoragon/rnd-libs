@@ -105,7 +105,7 @@ int RND_priorityQueuePush(RND_PriorityQueue *queue, const void *data, int priori
 
 void *RND_priorityQueuePeek(const RND_PriorityQueue *queue)
 {
-    return queue? queue->head->value : NULL;
+    return (queue && queue->size > 0)? queue->head->value : NULL;
 }
 
 int RND_priorityQueuePop(RND_PriorityQueue *queue, int (*dtor)(const void*))
@@ -119,8 +119,12 @@ int RND_priorityQueuePop(RND_PriorityQueue *queue, int (*dtor)(const void*))
         RND_ERROR("dtor %p returned %d for data %p", dtor, error, queue->head->value);
         return 2;
     }
-    queue->head = (queue->head == queue->data + queue->capacity - 1)? queue->data : queue->head + 1;
-    queue->size--;
+    if (queue->size > 0) {
+        queue->head = (queue->head == queue->data + queue->capacity - 1)? queue->data : queue->head + 1;
+        queue->size--;
+    } else {
+        RND_WARN("the queue is already empty");
+    }
     return 0;
 }
 

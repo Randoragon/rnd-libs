@@ -98,10 +98,6 @@ int RND_priorityQueuePush(RND_PriorityQueue *queue, const void *data, int priori
 
 /** Returns a pointer to the front element of a queue.
  *
- * This function exists only for the sake of library
- * completeness, but you may use @ref RND_PriorityQueue::head
- * with the exact same effect.
- *
  * @param[in] queue A pointer to the queue.
  * @returns
  * - @ref RND_PriorityQueue::head - success
