@@ -73,8 +73,11 @@ int RND_queuePop(RND_Queue *queue, int (*dtor)(const void*))
         return 2;
     }
     if (queue->size > 0) {
-        queue->head = (queue->head == queue->data + queue->capacity - 1)? queue->data : queue->head + 1;
-        queue->size--;
+        if (--queue->size == 0) {
+            queue->head = queue->tail;
+        } else {
+            queue->head = (queue->head == queue->data + queue->capacity - 1)? queue->data : queue->head + 1;
+        }
     } else {
         RND_WARN("the queue is already empty");
     }
@@ -107,8 +110,11 @@ int RND_queueRemove(RND_Queue *queue, size_t index, int (*dtor)(const void*))
         elem = src;
         src = (src == queue->data + queue->capacity - 1)? queue->data : src + 1;
     }
-    queue->tail = (queue->tail == queue->data)? queue->data + queue->capacity - 1 : queue->tail - 1;
-    queue->size--;
+    if (--queue->size == 0) {
+        queue->tail = queue->head;
+    } else {
+        queue->tail = (queue->tail == queue->data)? queue->data + queue->capacity - 1 : queue->tail - 1;
+    }
     return 0;
 }
 
