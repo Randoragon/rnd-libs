@@ -45,7 +45,7 @@ int RND_stackPush(RND_Stack *stack, const void *data)
 
 void *RND_stackPeek(const RND_Stack *stack)
 {
-    return (stack)? stack->data[stack->size - 1] : NULL;
+    return (stack && stack->size > 0)? stack->data[stack->size - 1] : NULL;
 }
 
 int RND_stackPop(RND_Stack *stack, int (*dtor)(const void*))
@@ -54,11 +54,15 @@ int RND_stackPop(RND_Stack *stack, int (*dtor)(const void*))
         RND_ERROR("the stack does not exist");
         return 1;
     }
-    stack->size--;
-    int error;
-    if (dtor && (error = dtor(stack->data[stack->size]))) {
-        RND_ERROR("dtor %p returned %d for data %p", dtor, error, stack->data[stack->size]);
-        return 2;
+    if (stack->size > 0) {
+        stack->size--;
+        int error;
+        if (dtor && (error = dtor(stack->data[stack->size]))) {
+            RND_ERROR("dtor %p returned %d for data %p", dtor, error, stack->data[stack->size]);
+            return 2;
+        }
+    } else {
+        RND_WARN("the stack is already empty");
     }
     return 0;
 }
