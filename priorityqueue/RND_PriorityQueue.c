@@ -80,11 +80,10 @@ int RND_priorityQueuePush(RND_PriorityQueue *queue, const void *data, int priori
                         break;
                     }
                 }
-            } else {
             }
         } else {
             // Fallback to linear search
-            for (;pos != end && priority > pos->priority;
+            for (;pos != end && priority >= pos->priority;
                     pos = (pos == edge)? queue->data : pos + 1);
         }
         for (
