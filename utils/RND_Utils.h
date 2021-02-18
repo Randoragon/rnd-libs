@@ -6,6 +6,22 @@
 #define RND_UTILS_H
 
 /********************************************************
+ *                       MACROS                         *
+ ********************************************************/
+
+/// Returns the maximum of two numbers
+#define MAX(X, Y) ((X) > (Y) ? (X) : (Y))
+/// Returns the minimum of two numbers
+#define MIN(X, Y) ((X) > (Y) ? (Y) : (X))
+/** Clamps a value inbetween two numbers
+ *
+ * @param X the number to clamp
+ * @param Y bottom boundary
+ * @param Z top boundary
+ */
+#define CLAMP(X, Y, Z) (MAX((MIN((X), (Z))), (Y)))
+
+/********************************************************
  *                     FUNCTIONS                        *
  ********************************************************/
 
