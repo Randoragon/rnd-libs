@@ -34,6 +34,9 @@ main:
 	@printf -- "--- GAME ---\n"
 	$(MAKE) -C game $@
 	@printf -- "------------\n\n"
+	@printf -- "--- UTILS ---\n"
+	$(MAKE) -C game $@
+	@printf -- "-------------\n\n"
 
 clean:
 	@printf -- "--- ERRMSG ---\n"
@@ -69,6 +72,9 @@ clean:
 	@printf -- "--- GAME ---\n"
 	$(MAKE) -C game $@
 	@printf -- "------------\n\n"
+	@printf -- "--- UTILS ---\n"
+	$(MAKE) -C game $@
+	@printf -- "-------------\n\n"
 
 install:
 	@printf -- "--- ERRMSG ---\n"
@@ -104,6 +110,9 @@ install:
 	@printf -- "--- GAME ---\n"
 	$(MAKE) -C game $@
 	@printf -- "------------\n\n"
+	@printf -- "--- UTILS ---\n"
+	$(MAKE) -C game $@
+	@printf -- "-------------\n\n"
 
 docs: FORCE
 	doxygen Doxyfile
