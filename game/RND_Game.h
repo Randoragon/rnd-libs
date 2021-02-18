@@ -160,15 +160,13 @@ struct RND_GameHandler
     /** The priority function for inserting elements into
      * @ref RND_GameHandler::queue.
      *
-     * This function should return a constant priority
-     * value for each distinct object index. Lower return
-     * values mean that an instance will be put closer
-     * to the front of the queue, so its handler code
+     * Lower return values mean that an instance will be put
+     * closer to the front of the queue, so its handler code
      * will execute before others. Alternatively,
      * you can set this to @c NULL to treat everything
-     * equally (no priorities).
+     * equally (FIFO queue, all priorities will default to 0).
      */
-    int (*priority_func)(RND_GameObjectIndex);
+    int (*priority_func)(const RND_GameInstance*);
 };
 
 /** Stores a single operation on @ref RND_GameHandler::queue.
@@ -337,12 +335,12 @@ int RND_gameInstanceKill(RND_GameInstanceId id);
  *
  * @param[in] priority_func A pointer to the priority function
  * (@ref RND_GameHandler::priority_func) @b OR @c NULL for
- * treating everything equally (no priorities).
+ * treating everything equally (ordinary FIFO queue).
  * @returns
  * - A pointer to the new @ref RND_GameHandler struct - success
  * - @c NULL - insufficient memory
  */
-RND_GameHandler *RND_gameHandlerCreate(int (*priority_func)(RND_GameObjectIndex));
+RND_GameHandler *RND_gameHandlerCreate(int (*priority_func)(const RND_GameInstance*));
 
 /** Executes handler code for every applicable instance.
  *

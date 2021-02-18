@@ -193,7 +193,7 @@ int RND_gameInstanceKill(RND_GameInstanceId id)
     return 0;
 }
 
-RND_GameHandler *RND_gameHandlerCreate(int (*priority_func)(RND_GameObjectIndex))
+RND_GameHandler *RND_gameHandlerCreate(int (*priority_func)(const RND_GameInstance*))
 {
     RND_GameHandler *new;
     if (!(new = (RND_GameHandler*)malloc(sizeof(RND_GameHandler)))) {
@@ -347,14 +347,12 @@ int RND_gameHandlerUpdateQueue(RND_GameHandler *handler)
             }
             free(id);
         } else {
-            RND_GameObjectIndex index;
             int priority;
-            index = RND_instances[*id].index;
-            priority = (handler->priority_func)? handler->priority_func(index) : 0;
+            priority = (handler->priority_func)? handler->priority_func(RND_instances + *id) : 0;
             int err;
             if ((err = RND_priorityQueuePush(pq, id, priority))) {
                 RND_ERROR("RND_priorityQueuePush returned %d for instance %lu (%s)",
-                        err, *id, RND_gameObjectGetName(index));
+                        err, *id, RND_gameObjectGetName(RND_instances[*id].index));
                 return 4;
             }
         }

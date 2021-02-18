@@ -233,11 +233,11 @@
  * 
  * In short, the right way to handle events for all spawned instances is to
  * create a new event handler. If execution order is important, then you will need
- * a @b priority function, which is basically a function that intakes object indices
- * and returns @c int values that represent that object's priority.  For example,
- * in the context of handling a draw event, lower priority means instances of that
- * object will be drawn earlier, meaning any instances of a higher priority will
- * be drawn on top.
+ * to write a @b priority @b function, which is a function that intakes an instance
+ * and returns an integer denoting that instance's priority. For example, in the
+ * context of handling a draw event, instances with lower priority values will
+ * be drawn earlier than instances with higher priority, which will result in the
+ * latter being drawn on top of the former.
  * 
  * @subsection sec3-2 3.2 Example Usage
  * 
@@ -247,12 +247,12 @@
  * First, we need to decide whether or not we need a priority function. For this
  * example we will skip this step, because it is not needed when we're considering
  * a button even with only one receiving object type. However, to illustrate what
- * priority functions look like, here's an arbitrary example:
+ * priority functions may look like, here's an arbitrary example:
  * 
  * @code
- * int examplePriorityFunc(RND_GameObjectIndex index)
+ * int examplePriorityFunc(const RND_GameInstance *inst)
  * {
- *     switch(index) {
+ *     switch(inst->index) {
  *         case OBJECT_INDEX_PLAYER: return 2;
  *         case OBJECT_INDEX_ENEMY:  return -2;
  *         case OBJECT_INDEX_WALL:   return 1;
@@ -261,8 +261,13 @@
  * }
  * @endcode
  * 
- * The important thing to note is that it doesn't matter what numbers you use
- * for priorities, it's only the relations between them that matter.
+ * A couple things to note about priority functions:
+ * @li It doesn't matter what method you use to determine the return value. In
+ * the above example I used @ref RND_GameInstance::index, but you can do anything
+ * you want, like accessing specific object types' instance data or even randomness.
+ * @li Priority functions absolutely should not modify instances!
+ * @li The return values by themselves don't mean anything, it's just the relations
+ * between them that influence the call order.
  * 
  * Step 2, write a handler function for each object that needs it (in our case
  * it's only the player, but normally you would have multiple functions, one
@@ -292,7 +297,7 @@
  *
  * @ref RND_gameHandlerCreate intakes a priority function pointer,
  * but you can pass it @c NULL and everything will be treated equally
- * (like a normal, non-priority queue).
+ * like in an ordinary FIFO queue (all priorities will default to 0).
  * 
  * That's everything as far as setting up goes. From this point onward, every single
  * instance that gets spawned or dies will be added or removed from the handler's
