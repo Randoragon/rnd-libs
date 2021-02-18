@@ -1,6 +1,7 @@
 *.o
 *.out
 *.so
+*.a
 tags
 Session.vim
 docs
