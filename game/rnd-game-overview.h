@@ -269,9 +269,11 @@
  * for each object type that's relevant):
  * 
  * @code
- * int objectPlayerEventButtonHandler(void *object)
+ * int objectPlayerEventButtonHandler(RND_GameInstance *self)
  * {
- *     ((ObjectPlayer*)object)->health /= 2.0;
+ *     // it's convenient to make a pointer to raw instance data
+ *     ObjectPlayer *o = (ObjectPlayer*)self->data;
+ *     o->health /= 2.0;
  *     return 0;
  * }
  * @endcode

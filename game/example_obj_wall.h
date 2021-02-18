@@ -1,3 +1,4 @@
+#include <RND_Game.h>
 #include <RND_ErrMsg.h>
 
 typedef struct
@@ -6,11 +7,11 @@ typedef struct
     short durability;
 } ObjectWall;
 
-int objectWallCtor(void *data)
+int objectWallCtor(RND_GameInstance *self)
 {
-    ObjectWall *obj = (ObjectWall*)data;
-    obj->x = 0;
-    obj->y = 0;
-    obj->durability = 15;
+    ObjectWall *o = (ObjectWall*)self->data;
+    o->x = 0;
+    o->y = 0;
+    o->durability = 15;
     return 0;
 }

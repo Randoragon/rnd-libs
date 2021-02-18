@@ -1,3 +1,4 @@
+#include <RND_Game.h>
 #include <stdbool.h>
 #include <RND_ErrMsg.h>
 
@@ -8,12 +9,12 @@ typedef struct
     bool dead;
 } ObjectEnemy;
 
-int objectEnemyCtor(void *data)
+int objectEnemyCtor(RND_GameInstance *self)
 {
-    ObjectEnemy *obj = (ObjectEnemy*)data;
-    obj->x = 0;
-    obj->y = 0;
-    obj->health = 20.0;
-    obj->dead = false;
+    ObjectEnemy *o = (ObjectEnemy*)self->data;
+    o->x = 0;
+    o->y = 0;
+    o->health = 20.0;
+    o->dead = false;
     return 0;
 }

@@ -1,3 +1,4 @@
+#include <RND_Game.h>
 #include <malloc.h>
 #include <RND_ErrMsg.h>
 
@@ -10,23 +11,23 @@ typedef struct
     char *name;
 } ObjectPlayer;
 
-int objectPlayerCtor(void *data)
+int objectPlayerCtor(RND_GameInstance *self)
 {
-    ObjectPlayer *obj = (ObjectPlayer*)data;
-    if (!(obj->name = (char*)malloc(sizeof(char) * OBJECT_PLAYER_MAX_NAME_LENGTH))) {
+    ObjectPlayer *o = (ObjectPlayer*)self->data;
+    if (!(o->name = (char*)malloc(sizeof(char) * OBJECT_PLAYER_MAX_NAME_LENGTH))) {
         RND_ERROR("malloc");
         return 1;
     }
-    obj->name[0] = '\0';
-    obj->x = 0;
-    obj->y = 0;
-    obj->health = 20.0;
+    o->name[0] = '\0';
+    o->x = 0;
+    o->y = 0;
+    o->health = 20.0;
     return 0;
 }
 
-int objectPlayerDtor(void *data)
+int objectPlayerDtor(RND_GameInstance *self)
 {
-    ObjectPlayer *obj = (ObjectPlayer*)data;
-    free(obj->name);
+    ObjectPlayer *o = (ObjectPlayer*)self->data;
+    free(o->name);
     return 0;
 }

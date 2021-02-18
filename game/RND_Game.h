@@ -66,24 +66,24 @@
  *                      TYPEDEFS                        *
  ********************************************************/
 
-/// Object index type.
-typedef uint16_t RND_GameObjectIndex;
-/// Instance ID type.
-typedef uint64_t RND_GameInstanceId;
-/// Arbitrary event handler type.
-typedef int (*RND_GameHandlerFunc)(void*);
-
-
-/********************************************************
- *                    STRUCTURES                        *
- ********************************************************/
-
 /// @cond
 typedef struct RND_GameObjectMeta RND_GameObjectMeta;
 typedef struct RND_GameInstance RND_GameInstance;
 typedef struct RND_GameHandler RND_GameHandler;
 typedef struct RND_GameHandlerOp RND_GameHandlerOp;
 /// @endcond
+
+/// Object index type.
+typedef uint16_t RND_GameObjectIndex;
+/// Instance ID type.
+typedef uint64_t RND_GameInstanceId;
+/// Arbitrary event handler type.
+typedef int (*RND_GameHandlerFunc)(RND_GameInstance*);
+
+
+/********************************************************
+ *                    STRUCTURES                        *
+ ********************************************************/
 
 /// A container for object metadata.
 struct RND_GameObjectMeta
@@ -485,5 +485,22 @@ inline void RND_gameHandlerAdd(const RND_GameHandler *handler, RND_GameObjectInd
  * - 4 - @c RND_priorityQueuePush returned error
  */
 int RND_gameHandlerUpdateQueue(RND_GameHandler *handler);
+
+/** Returns the instance id of a @ref RND_GameInstance pointer.
+ *
+ * Since @ref RND_instances is an array indexed by instance id,
+ * to can obtain the id using the following method:
+ * @code
+ * RND_GameInstance *inst = RND_instances + id;
+ * RND_GameInstanceId id = inst - RND_instances;
+ * @endcode
+ * @param[in] inst Pointer to the instance
+ * @returns
+ * - the provided instance's id
+ */
+inline RND_GameInstanceId RND_gameInstanceGetId(const RND_GameInstance *inst)
+{
+    return inst - RND_instances;
+}
 
 #endif /* RND_GAME_H */

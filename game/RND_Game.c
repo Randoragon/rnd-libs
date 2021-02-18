@@ -44,7 +44,7 @@ void RND_gameCleanup()
         if (inst->is_alive) {
             if (RND_dtors[inst->index]) {
                 int error;
-                if ((error = RND_dtors[inst->index](inst->data))) {
+                if ((error = RND_dtors[inst->index](inst))) {
                     RND_WARN("object %d (%s)'s destructor returned %d for instance id %lu",
                             inst->index, RND_gameObjectGetName(inst->index), error, i);
                 }
@@ -118,7 +118,7 @@ RND_GameInstanceId RND_gameInstanceSpawn(RND_GameObjectIndex index)
     }
     if (RND_ctors[index]) {
         int error;
-        if ((error = RND_ctors[index](new->data))) {
+        if ((error = RND_ctors[index](new))) {
             RND_WARN("RND_ctors[%u] (%s) returned %d", index, RND_gameObjectGetName(index), error);
         }
     }
@@ -159,7 +159,7 @@ int RND_gameInstanceKill(RND_GameInstanceId id)
     inst->is_alive = false;
     if (RND_dtors[inst->index]) {
         int error;
-        if ((error = RND_dtors[inst->index](inst->data))) {
+        if ((error = RND_dtors[inst->index](inst))) {
             RND_ERROR("RND_dtors[%u] (%s) returned %d for instance id %lu",
                     inst->index, RND_gameObjectGetName(inst->index), error, id);
             return 1;
@@ -249,7 +249,7 @@ int RND_gameHandlerRun(RND_GameHandler *handler)
         RND_GameInstance *inst = RND_instances + id;
         if (inst->data && handler->handlers[inst->index]) {
             int error;
-            if ((error = handler->handlers[inst->index](inst->data))) {
+            if ((error = handler->handlers[inst->index](inst))) {
                 RND_ERROR("handler %p returned %d for instance id %lu of object %u (%s)",
                         handler + inst->index, error, id, inst->index, RND_gameObjectGetName(inst->index));
                 ret++;
