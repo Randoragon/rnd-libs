@@ -18,11 +18,11 @@ clean:
 
 install: CFLAGS += -O3
 install: clean all
-	mkdir -p ${DESTDIR}${PREFIX}/include  ${DESTDIR}${PREFIX}/lib
+	@mkdir -p ${DESTDIR}${PREFIX}/include  ${DESTDIR}${PREFIX}/lib
 	cp -f -- RND_Game.h ${DESTDIR}${PREFIX}/include
-	chmod 644 -- ${DESTDIR}${PREFIX}/include/RND_Game.h
+	@chmod 644 -- ${DESTDIR}${PREFIX}/include/RND_Game.h
 	cp -f -- $(OUT) ${DESTDIR}${PREFIX}/lib
-	chmod 755 -- ${DESTDIR}${PREFIX}/lib/$(OUT)
+	@chmod 755 -- ${DESTDIR}${PREFIX}/lib/$(OUT)
 
 example: example.o
 	$(CC) $(CFLAGS) -g -Og -L. -lrnd_game example.o -o a.out

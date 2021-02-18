@@ -8,9 +8,9 @@ main:
 	@printf "This is just a header file, no need to compile\n"
 
 install:
-	mkdir -p -- ${DESTDIR}${PREFIX}/include
+	@mkdir -p -- ${DESTDIR}${PREFIX}/include
 	cp -f -- RND_ErrMsg.h ${DESTDIR}${PREFIX}/include
-	chmod 644 -- ${DESTDIR}${PREFIX}/include/RND_ErrMsg.h
+	@chmod 644 -- ${DESTDIR}${PREFIX}/include/RND_ErrMsg.h
 
 clean:
 

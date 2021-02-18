@@ -20,11 +20,11 @@ debug: clean all
 
 install: CFLAGS += -O3
 install: clean all
-	mkdir -p ${DESTDIR}${PREFIX}/include  ${DESTDIR}${PREFIX}/lib
+	@mkdir -p ${DESTDIR}${PREFIX}/include  ${DESTDIR}${PREFIX}/lib
 	cp -f -- RND_QueueLL.h ${DESTDIR}${PREFIX}/include
-	chmod 644 -- ${DESTDIR}${PREFIX}/include/RND_QueueLL.h
+	@chmod 644 -- ${DESTDIR}${PREFIX}/include/RND_QueueLL.h
 	cp -f -- $(OUT) ${DESTDIR}${PREFIX}/lib
-	chmod 755 -- ${DESTDIR}${PREFIX}/lib/$(OUT)
+	@chmod 755 -- ${DESTDIR}${PREFIX}/lib/$(OUT)
 
 example: example.o
 	$(CC) $(CFLAGS) example.o -L. -lrnd_queuell -o a.out
