@@ -489,11 +489,12 @@ int RND_gameHandlerUpdateQueue(RND_GameHandler *handler);
 /** Returns the instance id of a @ref RND_GameInstance pointer.
  *
  * Since @ref RND_instances is an array indexed by instance id,
- * to can obtain the id using the following method:
+ * it is easy to convert an instance pointer back to its id:
  * @code
  * RND_GameInstance *inst = RND_instances + id;
  * RND_GameInstanceId id = inst - RND_instances;
  * @endcode
+ * This function does exactly that, no catch.
  * @param[in] inst Pointer to the instance
  * @returns
  * - the provided instance's id
