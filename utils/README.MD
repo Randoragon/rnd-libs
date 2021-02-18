@@ -23,8 +23,8 @@ The header file will be copied to `/usr/include/` and the library file to `/usr/
 
 ## Usage
 
-Make sure to `#include <RND_BitArray.h>` and link with `librnd_bitarray.so` (this is usually
-done by passing the `-lrnd_bitarray` flag to the compiler).
+Make sure to `#include <RND_Utils.h>` and link with `librnd_utils.a` (this is usually
+done by passing the `-lrnd_utils` flag to the compiler).
 
 Note that this library is statically compiled, because its function definitions are
 very small.
