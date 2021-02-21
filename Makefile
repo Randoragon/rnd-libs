@@ -35,7 +35,7 @@ main:
 	$(MAKE) -C game $@
 	@printf -- "------------\n\n"
 	@printf -- "--- UTILS ---\n"
-	$(MAKE) -C game $@
+	$(MAKE) -C utils $@
 	@printf -- "-------------\n\n"
 
 clean:
@@ -73,7 +73,7 @@ clean:
 	$(MAKE) -C game $@
 	@printf -- "------------\n\n"
 	@printf -- "--- UTILS ---\n"
-	$(MAKE) -C game $@
+	$(MAKE) -C utils $@
 	@printf -- "-------------\n\n"
 
 install:
@@ -111,7 +111,7 @@ install:
 	$(MAKE) -C game $@
 	@printf -- "------------\n\n"
 	@printf -- "--- UTILS ---\n"
-	$(MAKE) -C game $@
+	$(MAKE) -C utils $@
 	@printf -- "-------------\n\n"
 
 docs: FORCE
