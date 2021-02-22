@@ -1,6 +1,7 @@
 #include <RND_LinkedList.h>
 #include <RND_ErrMsg.h>
 #include <string.h>
+#include <limits.h>
 
 #include "RND_Game.h"
 
@@ -93,7 +94,7 @@ RND_GameInstanceId RND_gameInstanceSpawn(RND_GameObjectIndex index)
 
     // If instance ids exhausted, try to double array size
     if (RND_next_instance_id >= RND_instances_size) {
-        if (RND_instances_size & (1lu << 63)) {
+        if (RND_instances_size & (1LLU << (sizeof(RND_GameInstanceId) * CHAR_BIT - 1))) {
             RND_ERROR("maximum instance id reached (%lu)", RND_instances_size);
             return 0;
         }
@@ -103,7 +104,7 @@ RND_GameInstanceId RND_gameInstanceSpawn(RND_GameObjectIndex index)
             return 0;
         }
         RND_instances = new;
-        uint64_t half = sizeof(RND_GameInstance) * RND_instances_size;
+        uintmax_t half = sizeof(RND_GameInstance) * RND_instances_size;
         memset(RND_instances + half, 0, half);
         RND_instances_size *= 2;
     }

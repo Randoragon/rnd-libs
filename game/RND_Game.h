@@ -76,7 +76,7 @@ typedef struct RND_GameHandlerOp RND_GameHandlerOp;
 /// Object index type.
 typedef uint16_t RND_GameObjectIndex;
 /// Instance ID type.
-typedef uint64_t RND_GameInstanceId;
+typedef uintmax_t RND_GameInstanceId;
 /// Arbitrary event handler type.
 typedef int (*RND_GameHandlerFunc)(RND_GameInstance*);
 

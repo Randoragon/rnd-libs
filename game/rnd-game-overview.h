@@ -144,13 +144,14 @@
  * in various instance functions. Pretty much all functions that operate on
  * instances use the instance id as an identifier.
  * 
- * An instance id is a 64-bit unsigned integer, and every single instance must
+ * An instance id is of @c uintmax_t type, and every single instance must
  * have a unique one during a single runtime, so theoretically if you ran out of
- * (2^64-1) numbers (0 is reserved for errors and exceptions), the library would
- * crash with a fatal error.  To give some perspective though, to grind through
- * 2^64 ids you would need to spawn 1000000 instances per tick in a 60FPS game
- * over the course of nearly 10 thousand years, so you would most definitely
- * run out of memory first anyway.
+ * numbers (0 is reserved for errors and exceptions), the library would
+ * crash with a fatal error.  To give some perspective though, pretty much all
+ * modern computers use 64-bit processors, and to grind through 2^64 ids you would
+ * need to spawn 1000000 instances per tick in a 60FPS game over the course of
+ * nearly 10 thousand years, so you would most definitely run out of memory first
+ * anyway.
  * 
  * @subsection sec2-3 2.3 The Instances Array
  * 
