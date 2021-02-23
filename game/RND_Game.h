@@ -183,8 +183,8 @@ struct RND_GameHandlerOp
      */
     uint8_t opcode;
 
-    /// A pointer to the instance id to insert/delete.
-    RND_GameInstanceId *id;
+    /// The id of the instance to insert/delete.
+    RND_GameInstanceId id;
 };
 
 /********************************************************
@@ -408,21 +408,6 @@ int RND_gameHandlerDestroy(RND_GameHandler *handler);
  * - 3 - failed to destroy RND_GameHandler::queue_pending_changes
  */
 int RND_gameHandlerListDtor(const void *handler);
-
-/** A dtor function passed to @ref RND_queueDestroy when
- * freeing the @ref RND_handlers list in @ref RND_gameCleanup.
- *
- * This function is only meant to be used internally by the
- * library, but it can be used for any queue of initialized
- * @ref RND_GameHandlerOp pointers.
- *
- * @param[in] hop A void pointer to the handler op structure.
- * @returns
- * - 0 - success
- * - 1 - @p hop is a NULL pointer
- * - 2 - failed to destroy queue
- */
-int RND_gameHandlerOpQueueDtor(const void *hop);
 
 /** Returns whether or not a specific instance is alive, by instance ID.
  *
