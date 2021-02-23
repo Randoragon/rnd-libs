@@ -116,7 +116,7 @@ int RND_priorityQueuePop(RND_PriorityQueue *queue, int (*dtor)(const void*))
     }
     int error;
     if (dtor && (error = dtor(queue->head->value))) {
-        RND_ERROR("dtor %p returned %d for data %p", dtor, error, queue->head->value);
+        RND_ERROR("dtor returned %d for data %p", error, queue->head->value);
         return 2;
     }
     if (queue->size > 0) {
@@ -148,7 +148,7 @@ int RND_priorityQueueRemove(RND_PriorityQueue *queue, size_t index, int (*dtor)(
         elem = (elem == queue->data + queue->capacity - 1)? queue->data : elem + 1;
     }
     if (dtor && (error = dtor(elem->value))) {
-        RND_ERROR("dtor %p returned %d for data %p", dtor, error, elem->value);
+        RND_ERROR("dtor returned %d for data %p", error, elem->value);
         return 2;
     }
     src = (elem == queue->data + queue->capacity - 1)? queue->data : elem + 1;
@@ -176,7 +176,7 @@ int RND_priorityQueueClear(RND_PriorityQueue *queue, int (*dtor)(const void*))
         while (queue->size) {
             int error;
             if ((error = dtor(queue->head->value))) {
-                RND_ERROR("dtor %p returned %d for data %p", dtor, error, queue->data[queue->size].value);
+                RND_ERROR("dtor returned %d for data %p", error, queue->data[queue->size].value);
                 return 2;
             }
             queue->head = (queue->head == queue->data + queue->capacity - 1)? queue->data : queue->head + 1;
@@ -236,7 +236,7 @@ int RND_priorityQueuePrint(const RND_PriorityQueue *queue)
     printf("|-------+----------+----------------+----------------|\n");
     for (size_t i = 0; i < queue->size; i++) {
         RND_PriorityQueuePair *adr = queue->data + ((queue->head - queue->data + i) % queue->capacity);
-        printf("| %5lu | %8d | %14p | %14p |\n", i, adr->priority, adr, adr->value);
+        printf("| %5lu | %8d | %14p | %14p |\n", i, adr->priority, (void*)adr, adr->value);
     }
     printf("+----------------------------------------------------+\n");
     return 0;

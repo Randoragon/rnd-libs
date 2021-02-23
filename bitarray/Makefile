@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=c99 -pedantic -Werror
+CFLAGS=-std=c99 -pedantic -Wall
 OBJS=RND_BitArray.o
 OUT=librnd_bitarray.so
 PREFIX=/usr/local

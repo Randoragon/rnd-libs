@@ -241,7 +241,7 @@ int RND_gameHandlerRun(RND_GameHandler *handler)
             int error;
             if ((error = handler->handlers[inst->index](inst))) {
                 RND_ERROR("handler %p returned %d for instance id %lu of object %u (%s)",
-                        handler + inst->index, error, id, inst->index, RND_gameObjectGetName(inst->index));
+                        (void*)(handler + inst->index), error, id, inst->index, RND_gameObjectGetName(inst->index));
                 ret++;
             }
         }
@@ -268,11 +268,11 @@ int RND_gameHandlerDestroy(RND_GameHandler *handler)
     free(handler->handlers);
     int error;
     if ((error = RND_priorityQueueDestroy(handler->queue, RND_priorityQueueDtorFree))) {
-        RND_ERROR("RND_priorityQueueDestroy returned %d for handler %p\n", error, handler);
+        RND_ERROR("RND_priorityQueueDestroy returned %d for handler %p\n", error, (void*)handler);
         return 1;
     }
     if ((error = RND_queueDestroy(handler->queue_pending_changes, RND_queueDtorFree))) {
-        RND_ERROR("RND_queueDestroy returned %d for handler %p\n", error, handler);
+        RND_ERROR("RND_queueDestroy returned %d for handler %p\n", error, (void*)handler);
         return 2;
     }
     free(handler);
@@ -289,11 +289,11 @@ int RND_gameHandlerListDtor(const void *handler)
     free(h->handlers);
     int error;
     if ((error = RND_priorityQueueDestroy(h->queue, RND_priorityQueueDtorFree))) {
-        RND_ERROR("RND_priorityQueueDestroy returned %d for handler %p\n", error, h);
+        RND_ERROR("RND_priorityQueueDestroy returned %d for handler %p\n", error, (void*)h);
         return 2;
     }
     if ((error = RND_queueDestroy(h->queue_pending_changes, RND_queueDtorFree))) {
-        RND_ERROR("RND_queueDestroy returned %d for handler %p\n", error, h);
+        RND_ERROR("RND_queueDestroy returned %d for handler %p\n", error, (void*)h);
         return 3;
     }
     return 0;

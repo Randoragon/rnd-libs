@@ -87,7 +87,7 @@ int RND_linkedListRemove(RND_LinkedList **list, size_t index, int (*dtor)(const 
     if (index == 0) {
         int error;
         if (dtor && (error = dtor((*list)->data))) {
-            RND_ERROR("dtor %p returned %d for data %p", dtor, error, (*list)->data);
+            RND_ERROR("dtor returned %d for data %p", error, (*list)->data);
             return 2;
         }
         RND_LinkedList *tmp = *list;
@@ -109,7 +109,7 @@ int RND_linkedListRemove(RND_LinkedList **list, size_t index, int (*dtor)(const 
         }
         int error;
         if (dtor && (error = dtor(prev->next->data))) {
-            RND_ERROR("dtor %p returned %d for data %p", dtor, error, prev->next->data);
+            RND_ERROR("dtor returned %d for data %p", error, prev->next->data);
             return 2;
         }
         RND_LinkedList *tmp;
@@ -126,7 +126,7 @@ int RND_linkedListClear(RND_LinkedList **list, int (*dtor)(const void *))
     while (i) {
         RND_LinkedList *j = i->next;
         if (dtor && dtor(i->data)) {
-            RND_ERROR("dtor %p returned non-0 for data %p", dtor, i->data);
+            RND_ERROR("dtor returned non-0 for data %p", i->data);
             return 1;
         }
         free(i);
@@ -165,7 +165,7 @@ int RND_linkedListMap(RND_LinkedList **list, int (*map)(RND_LinkedList*, size_t)
     for (RND_LinkedList *q = *list; q; q = q->next, p++) {
         int error;
         if ((error = map(q, p))) {
-            RND_ERROR("map function %p returned %d for element no. %lu (%p)", map, error, p, q);
+            RND_ERROR("map function returned %d for element no. %lu (%p)", error, p, (void*)q);
             return 2;
         }
     }
@@ -193,7 +193,7 @@ int RND_linkedListFilter(RND_LinkedList **list, bool (*filter)(RND_LinkedList*, 
 // Map function used for the default method of printing list contents
 int RND_linkedListPrintMap(RND_LinkedList *elem, size_t index)
 {
-    printf("| %5lu | %14p | %14p |\n", index, elem, elem->data);
+    printf("| %5lu | %14p | %14p |\n", index, (void*)elem, elem->data);
     return 0;
 }
 

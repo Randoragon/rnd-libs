@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=c99 -pedantic -Werror
+CFLAGS=-std=c99 -pedantic -Wall
 OBJS=RND_PriorityQueueLL.o
 OUT=librnd_priorityqueuell.so
 PREFIX=/usr/local

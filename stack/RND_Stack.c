@@ -58,7 +58,7 @@ int RND_stackPop(RND_Stack *stack, int (*dtor)(const void*))
         stack->size--;
         int error;
         if (dtor && (error = dtor(stack->data[stack->size]))) {
-            RND_ERROR("dtor %p returned %d for data %p", dtor, error, stack->data[stack->size]);
+            RND_ERROR("dtor returned %d for data %p", error, stack->data[stack->size]);
             return 2;
         }
     } else {
@@ -80,7 +80,7 @@ int RND_stackRemove(RND_Stack *stack, size_t index, int (*dtor)(const void*))
     void **target = stack->data + stack->size - 1 - index;
     int error;
     if (dtor && (error = dtor(*target))) {
-        RND_ERROR("dtor %p returned %d for data %p", dtor, error, *target);
+        RND_ERROR("dtor returned %d for data %p", error, *target);
         return 2;
     }
     memcpy(target, target + 1, sizeof(void**) * index);
@@ -99,7 +99,7 @@ int RND_stackClear(RND_Stack *stack, int (*dtor)(const void*))
             stack->size--;
             int error;
             if ((error = dtor(stack->data[stack->size]))) {
-                RND_ERROR("dtor %p returned %d for data %p", dtor, error, stack->data[stack->size]);
+                RND_ERROR("dtor returned %d for data %p", error, stack->data[stack->size]);
                 return 2;
             }
         }
@@ -155,7 +155,7 @@ int RND_stackPrint(const RND_Stack *stack)
     printf("| INDEX |    ADDRESS     |      DATA      |\n");
     printf("|-------+----------------+----------------|\n");
     for (size_t i = stack->size; i-- > 0;) {
-        printf("| %5lu | %14p | %14p |\n", stack->size - i - 1, stack->data + i, stack->data[i]);
+        printf("| %5lu | %14p | %14p |\n", stack->size - i - 1, (void*)(stack->data + i), stack->data[i]);
     }
     printf("+-----------------------------------------+\n");
     return 0;

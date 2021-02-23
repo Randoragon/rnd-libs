@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=c99 -pedantic -Werror
+CFLAGS=-std=c99 -pedantic -Wall
 OBJS=RND_QueueLL.o
 OUT=librnd_queuell.so
 PREFIX=/usr/local

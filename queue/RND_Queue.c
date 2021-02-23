@@ -69,7 +69,7 @@ int RND_queuePop(RND_Queue *queue, int (*dtor)(const void*))
     }
     int error;
     if (dtor && (error = dtor(*queue->head))) {
-        RND_ERROR("dtor %p returned %d for data %p", dtor, error, *queue->head);
+        RND_ERROR("dtor returned %d for data %p", error, *queue->head);
         return 2;
     }
     if (queue->size > 0) {
@@ -101,7 +101,7 @@ int RND_queueRemove(RND_Queue *queue, size_t index, int (*dtor)(const void*))
     }
     int error;
     if (dtor && (error = dtor(*elem))) {
-        RND_ERROR("dtor %p returned %d for data %p", dtor, error, *elem);
+        RND_ERROR("dtor returned %d for data %p", error, *elem);
         return 2;
     }
     src = (elem == queue->data + queue->capacity - 1)? queue->data : elem + 1;
@@ -128,7 +128,7 @@ int RND_queueClear(RND_Queue *queue, int (*dtor)(const void*))
         while (queue->size) {
             int error;
             if ((error = dtor(*queue->head))) {
-                RND_ERROR("dtor %p returned %d for data %p", dtor, error, queue->data[queue->size]);
+                RND_ERROR("dtor returned %d for data %p", error, queue->data[queue->size]);
                 return 2;
             }
             queue->head = (queue->head == queue->data + queue->capacity - 1)? queue->data : queue->head + 1;
@@ -188,7 +188,7 @@ int RND_queuePrint(RND_Queue *queue)
     printf("|-------+----------------+----------------|\n");
     for (size_t i = 0; i < queue->size; i++) {
         void **adr = queue->data + ((queue->head - queue->data + i) % queue->capacity);
-        printf("| %5lu | %14p | %14p |\n", i, adr, *adr);
+        printf("| %5lu | %14p | %14p |\n", i, (void*)adr, *adr);
     }
     printf("+-----------------------------------------+\n");
     return 0;

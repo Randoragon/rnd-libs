@@ -60,7 +60,7 @@ int RND_priorityQueueLLPop(RND_PriorityQueueLL **queue, int (*dtor)(const void*)
     RND_PriorityQueueLL *next = (*queue)->next;
     int error;
     if (dtor && (error = dtor((*queue)->data->data))) {
-        RND_ERROR("dtor %p returned %d for data %p", dtor, error, (*queue)->data->data);
+        RND_ERROR("dtor returned %d for data %p", error, (*queue)->data->data);
         return 2;
     }
     free((*queue)->data);
@@ -78,7 +78,7 @@ int RND_priorityQueueLLRemove(RND_PriorityQueueLL **queue, size_t index, int (*d
     if (index == 0) {
         int error;
         if (dtor && (error = dtor((*queue)->data))) {
-            RND_ERROR("dtor %p returned %d for data %p", dtor, error, (*queue)->data);
+            RND_ERROR("dtor returned %d for data %p", error, (void*)((*queue)->data));
             return 2;
         }
         RND_PriorityQueueLL *tmp = *queue;
@@ -100,7 +100,7 @@ int RND_priorityQueueLLRemove(RND_PriorityQueueLL **queue, size_t index, int (*d
         }
         int error;
         if (dtor && (error = dtor(prev->next->data))) {
-            RND_ERROR("dtor %p returned %d for data %p", dtor, error, prev->next->data);
+            RND_ERROR("dtor returned %d for data %p", error, (void*)(prev->next->data));
             return 2;
         }
         RND_PriorityQueueLL *tmp;
@@ -118,7 +118,7 @@ int RND_priorityQueueLLClear(RND_PriorityQueueLL **queue, int (*dtor)(const void
         RND_PriorityQueueLL *j = i->next;
         int error;
         if (dtor && (error = dtor(i->data->data))) {
-            RND_ERROR("dtor %p returned %d for data %p", dtor, error, i->data->data);
+            RND_ERROR("dtor returned %d for data %p", error, i->data->data);
             return 1;
         }
         free(i->data);
@@ -158,7 +158,7 @@ int RND_priorityQueueLLMap(RND_PriorityQueueLL **queue, int (*map)(RND_PriorityQ
     for (RND_PriorityQueueLL *q = *queue; q; q = q->next, p++) {
         int error;
         if ((error = map(q, p))) {
-            RND_ERROR("map function %p returned %d for element no. %lu (%p)", map, error, p, q);
+            RND_ERROR("map function returned %d for element no. %lu (%p)", error, p, (void*)q);
             return 2;
         }
     }
@@ -168,7 +168,7 @@ int RND_priorityQueueLLMap(RND_PriorityQueueLL **queue, int (*map)(RND_PriorityQ
 // Map function used for the default method of printing queue contents
 int RND_priorityQueueLLPrintMap(const RND_PriorityQueueLL *elem, size_t index)
 {
-    printf("| %5lu | %8d | %14p | %14p |\n", index, elem->data->priority, elem, elem->data->data);
+    printf("| %5lu | %8d | %14p | %14p |\n", index, elem->data->priority, (void*)elem, elem->data->data);
     return 0;
 }
 

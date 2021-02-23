@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-std=c99 -pedantic -Werror
+CFLAGS=-std=c99 -pedantic -Wall
 LDFLAGS=-L../linkedlist -lrnd_linkedlist
 OBJS=RND_HashMap.o
 OUT=librnd_hashmap.so

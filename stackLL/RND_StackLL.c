@@ -34,7 +34,7 @@ int RND_stackLLPop(RND_StackLL **stack, int (*dtor)(const void*))
     RND_StackLL *next = (*stack)->next;
     int error;
     if (dtor && (error = dtor((*stack)->data))) {
-        RND_ERROR("dtor %p returned %d for data %p", dtor, error, (*stack)->data);
+        RND_ERROR("dtor returned %d for data %p", error, (*stack)->data);
         return 2;
     }
     free(*stack);
@@ -60,7 +60,7 @@ int RND_stackLLRemove(RND_StackLL **stack, size_t index, int (*dtor)(const void*
     }
     int error;
     if (dtor && (error = dtor(target->data))) {
-        RND_ERROR("dtor %p returned %d for data %p", dtor, error, target->data);
+        RND_ERROR("dtor returned %d for data %p", error, target->data);
         return 2;
     }
     if (prev) {
@@ -79,7 +79,7 @@ int RND_stackLLClear(RND_StackLL **stack, int (*dtor)(const void*))
         RND_StackLL *j = i->next;
         int error;
         if (dtor && (error = dtor(i->data))) {
-            RND_ERROR("dtor %p returned %d for data %p", dtor, error, i->data);
+            RND_ERROR("dtor returned %d for data %p", error, i->data);
             return 1;
         }
         free(i);
@@ -118,7 +118,7 @@ int RND_stackLLMap(RND_StackLL **stack, int (*map)(RND_StackLL*, size_t))
     for (RND_StackLL *q = *stack; q; q = q->next, p++) {
         int error;
         if ((error = map(q, p))) {
-            RND_ERROR("map function %p returned %d for element no. %lu (%p)", map, error, p, q);
+            RND_ERROR("map function returned %d for element no. %lu (%p)", error, p, (void*)q);
             return 2;
         }
     }
@@ -128,7 +128,7 @@ int RND_stackLLMap(RND_StackLL **stack, int (*map)(RND_StackLL*, size_t))
 // Map function used for the default method of printing stack contents
 int RND_stackLLPrintMap(const RND_StackLL *elem, size_t index)
 {
-    printf("| %5lu | %14p | %14p |\n", index, elem, elem->data);
+    printf("| %5lu | %14p | %14p |\n", index, (void*)elem, elem->data);
     return 0;
 }
 

@@ -45,7 +45,7 @@ int RND_queueLLPop(RND_QueueLL **queue, int (*dtor)(const void*))
     RND_QueueLL *next = (*queue)->next;
     int error;
     if (dtor && (error = dtor((*queue)->data))) {
-        RND_ERROR("dtor %p returned %d for data %p", dtor, error, (*queue)->data);
+        RND_ERROR("dtor returned %d for data %p", error, (*queue)->data);
         return 2;
     }
     free(*queue);
@@ -62,7 +62,7 @@ int RND_queueLLRemove(RND_QueueLL **queue, size_t index, int (*dtor)(const void*
     if (index == 0) {
         int error;
         if (dtor && (error = dtor((*queue)->data))) {
-            RND_ERROR("dtor %p returned %d for data %p", dtor, error, (*queue)->data);
+            RND_ERROR("dtor returned %d for data %p", error, (*queue)->data);
             return 2;
         }
         RND_QueueLL *tmp = *queue;
@@ -84,7 +84,7 @@ int RND_queueLLRemove(RND_QueueLL **queue, size_t index, int (*dtor)(const void*
         }
         int error;
         if (dtor && (error = dtor(prev->next->data))) {
-            RND_ERROR("dtor %p returned %d for data %p", dtor, error, prev->next->data);
+            RND_ERROR("dtor returned %d for data %p", error, prev->next->data);
             return 2;
         }
         RND_QueueLL *tmp;
@@ -102,7 +102,7 @@ int RND_queueLLClear(RND_QueueLL **queue, int (*dtor)(const void*))
         RND_QueueLL *j = i->next;
         int error;
         if (dtor && (error = dtor(i->data))) {
-            RND_ERROR("dtor %p returned %d for data %p", dtor, error, i->data);
+            RND_ERROR("dtor returned %d for data %p", error, i->data);
             return 1;
         }
         free(i);
@@ -141,7 +141,7 @@ int RND_queueLLMap(RND_QueueLL **queue, int (*map)(RND_QueueLL*, size_t))
     for (RND_QueueLL *q = *queue; q; q = q->next, p++) {
         int error;
         if ((error = map(q, p))) {
-            RND_ERROR("map function %p returned %d for element no. %lu (%p)", map, error, p, q);
+            RND_ERROR("map function returned %d for element no. %lu (%p)", error, p, (void*)q);
             return 2;
         }
     }
@@ -151,7 +151,7 @@ int RND_queueLLMap(RND_QueueLL **queue, int (*map)(RND_QueueLL*, size_t))
 // Map function used for the default method of printing queue contents
 int RND_queueLLPrintMap(const RND_QueueLL *elem, size_t index)
 {
-    printf("| %5lu | %14p | %14p |\n", index, elem, elem->data);
+    printf("| %5lu | %14p | %14p |\n", index, (void*)elem, elem->data);
     return 0;
 }
 

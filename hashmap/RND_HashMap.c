@@ -59,7 +59,7 @@ int RND_hashMapAdd(RND_HashMap *map, const char *key, const void *value)
     new->value = (void*)value;
     int error;
     if ((error = RND_linkedListAdd(map->data + index, new))) {
-        RND_ERROR("RND_linkedListAdd returned %d for hash index %lu, data %p", error, index, new);
+        RND_ERROR("RND_linkedListAdd returned %d for hash index %lu, data %p", error, index, (void*)new);
         free((void*)new->key);
         free(new);
         return 3;
@@ -99,11 +99,11 @@ int RND_hashMapRemove(RND_HashMap *map, const char *key, int (*dtor)(const void*
         if (elem && strcmp(pair->key, key) == 0) {
             int error;
             if (dtor && (error = dtor(pair->value))) {
-                RND_ERROR("dtor function returned %d for key \"%s\", value %p", error, pair->key, pair->value);
+                RND_ERROR("dtor function returned %d for key \"%s\", value %p", error, pair->key, (void*)pair->value);
                 return 2;
             }
             if ((error = RND_linkedListRemove(map->data + p, q, NULL))) {
-                RND_ERROR("RND_linkedListRemove returned %d for key \"%s\", value %p", error, pair->key, pair->value);
+                RND_ERROR("RND_linkedListRemove returned %d for key \"%s\", value %p", error, pair->key, (void*)pair->value);
                 return 3;
             }
             free((void*)pair->key);
@@ -155,7 +155,7 @@ int RND_hashMapClear(RND_HashMap *map, int (*dtor)(const void*))
             if (pair != NULL) {
                 int error;
                 if (dtor && (error = dtor(pair->value))) {
-                    RND_ERROR("dtor function returned %d for key \"%s\", value %p", error, pair->key, pair->value);
+                    RND_ERROR("dtor function returned %d for key \"%s\", value %p", error, pair->key, (void*)pair->value);
                     return 2;
                 }
                 free((void*)pair->key);
@@ -175,7 +175,7 @@ int RND_hashMapDestroy(RND_HashMap *map, int (*dtor)(const void*))
 {
     int error;
     if ((error = RND_hashMapClear(map, dtor))) {
-        RND_ERROR("RND_hashMapClear returned %d for map %p, dtor %p", error, map, dtor);
+        RND_ERROR("RND_hashMapClear returned %d for map %p", error, (void*)map);
         return 1;
     }
     free(map->data);
