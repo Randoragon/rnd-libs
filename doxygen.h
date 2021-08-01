@@ -2,6 +2,10 @@
  *
  * @section Documentation Overview
  *
+ * @b DISCLAIMER
+ * This library is no longer maintained. See
+ * https://github.com/randoragon/librnd instead.
+ *
  * You are reading the documentation of RND library suite. "RND" is just
  * an abbreviation of my internet name, "Randoragon", and it's a prefix
  * I use for all library/function/variable names in the global scope of

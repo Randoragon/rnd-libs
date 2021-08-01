@@ -1,5 +1,14 @@
 # RND Libraries
 
+## Disclaimer
+
+As of Sun 2021-08-01, this library is no longer maintained. A new, clean
+rewrite, with the same goals in mind but different execution is being worked on
+at [randoragon/librnd](https://github.com/randoragon/librnd). I wanted to start
+fresh to try to improve many things based on my experience from this project.
+
+---
+
 This directory holds a collection of my self-written C libraries.
 Some of these may be data structure implementations, wrappers,
 helper scripts and so on. The list may grow longer in size.
