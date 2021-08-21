@@ -4,7 +4,7 @@
  *
  * @b DISCLAIMER
  * This library is no longer maintained. See
- * https://github.com/randoragon/librnd instead.
+ * https://github.com/randoragon/libstaple instead.
  *
  * You are reading the documentation of RND library suite. "RND" is just
  * an abbreviation of my internet name, "Randoragon", and it's a prefix
